@@ -86,27 +86,30 @@ export const DataEntryPortal: React.FC<DataEntryPortalProps> = ({ onNavigate, st
                 statusFilter={statusFilter}
                 onStatusFilterChange={onStatusFilterChange}
             >
-                {/* Search Bar - Height matched to Badge */}
-                <div className="relative group/search w-full md:w-64">
-                    <div className="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center shadow-lg transition-all focus-within:bg-white/20 focus-within:border-white/40 focus-within:shadow-xl px-2 min-h-[38px]">
-                        <div className="pl-2 text-emerald-200 group-focus-within/search:text-[#D4AF37] transition-colors"><Search size={16} /></div>
-                        <input 
-                            type="text" 
-                            value={searchTerm} 
-                            onChange={e => setSearchTerm(e.target.value)} 
-                            placeholder="Cari data (mis: Bumbu Rendang)..." 
-                            className="w-full bg-transparent border-none py-2 px-3 text-white placeholder-emerald-200/50 text-xs font-bold focus:ring-0 tracking-wide" 
-                        />
+                <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
+                    {/* Search Bar - Height matched to Badge */}
+                    <div className="relative group/search flex-1 sm:flex-none w-full sm:w-64">
+                        <div className="relative bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center shadow-lg transition-all focus-within:bg-white/20 focus-within:border-white/40 focus-within:shadow-xl px-2 min-h-[38px]">
+                            <div className="pl-2 text-emerald-200 group-focus-within/search:text-[#D4AF37] transition-colors"><Search size={16} /></div>
+                            <input 
+                                type="text" 
+                                value={searchTerm} 
+                                onChange={e => setSearchTerm(e.target.value)} 
+                                placeholder="Cari data..." 
+                                className="w-full bg-transparent border-none py-2 px-3 text-white placeholder-emerald-200/50 text-xs font-bold focus:ring-0 tracking-wide" 
+                            />
+                        </div>
                     </div>
-                </div>
-                <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 h-full min-h-[38px]">
-                    <div className="text-right">
-                        <p className="text-[8px] text-emerald-100 uppercase tracking-wide">Status Data</p>
-                        <p className="text-[10px] font-bold text-white leading-none">Live Monitoring</p>
-                    </div>
-                    <div className="relative w-2.5 h-2.5 flex items-center justify-center">
-                        <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
-                        <span className="relative w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]"></span>
+                    
+                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10 h-full min-h-[38px] flex-shrink-0">
+                        <div className="text-right">
+                            <p className="text-[8px] text-emerald-100 uppercase tracking-wide hidden sm:block">Status Data</p>
+                            <p className="text-[10px] font-bold text-white leading-none">Live<span className="hidden sm:inline"> Monitoring</span></p>
+                        </div>
+                        <div className="relative w-2 h-2 flex items-center justify-center">
+                            <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
+                            <span className="relative w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]"></span>
+                        </div>
                     </div>
                 </div>
             </HeroSection>
@@ -119,7 +122,7 @@ export const DataEntryPortal: React.FC<DataEntryPortalProps> = ({ onNavigate, st
                              <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none" style={{ color: r.color }}>
                                 <r.icon size={60} />
                              </div>
-                            <div className="p-3 rounded-2xl text-white shadow-md relative z-10" style={{ backgroundColor: r.color }}>
+                            <div className="p-3 rounded-2xl text-white shadow-md relative z-10 flex-shrink-0" style={{ backgroundColor: r.color }}>
                                 <r.icon size={20} />
                             </div>
                             <div className="flex-1 relative z-10 min-w-0">
@@ -139,18 +142,18 @@ export const DataEntryPortal: React.FC<DataEntryPortalProps> = ({ onNavigate, st
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {portalItems.map(item => (
-                        <button key={item.id} onClick={() => onNavigate(item.targetPage)} className="group relative flex flex-col justify-between text-left h-[160px] bg-white/60 backdrop-blur-sm border border-white/60 rounded-3xl shadow-sm hover:shadow-lg transition-all p-6 overflow-hidden">
+                        <button key={item.id} onClick={() => onNavigate(item.targetPage)} className="group relative flex flex-col justify-between text-left min-h-[160px] bg-white/60 backdrop-blur-sm border border-white/60 rounded-3xl shadow-sm hover:shadow-lg transition-all p-5 md:p-6 overflow-hidden active:scale-98">
                             
                              {/* Visual Background (Watermark) - MATCHING DASHBOARD STAT CARD */}
                              <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none" style={{ color: item.color }}>
-                                <item.icon size={80} />
+                                <item.icon size={80} className="w-20 h-20 md:w-24 md:h-24" />
                              </div>
 
                              {/* Top Row: Icon & Badge */}
                             <div className="flex justify-between items-start relative z-10">
                                 {/* ICON CARD STYLE MATCHING DASHBOARD */}
-                                <div className="p-3 rounded-2xl text-white shadow-md flex items-center justify-center group-hover:scale-105 transition-transform duration-300" style={{ backgroundColor: item.color }}>
-                                    <item.icon size={24} strokeWidth={2} />
+                                <div className="p-2.5 md:p-3 rounded-2xl text-white shadow-md flex items-center justify-center group-hover:scale-105 transition-transform duration-300" style={{ backgroundColor: item.color }}>
+                                    <item.icon size={20} strokeWidth={2} className="md:w-6 md:h-6" />
                                 </div>
                                 <div className={`px-2 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wider flex items-center gap-1 border backdrop-blur-sm ${item.status === 'draft' ? 'bg-amber-50/80 text-amber-700 border-amber-100' : 'bg-gray-50/80 text-gray-400 border-gray-100'}`}>
                                     {item.status === 'draft' ? <History size={8} /> : <Activity size={8} />}
@@ -159,14 +162,14 @@ export const DataEntryPortal: React.FC<DataEntryPortalProps> = ({ onNavigate, st
                             </div>
 
                             {/* Middle: Content (Pushed to bottom by justify-between) */}
-                            <div className="relative z-10 mt-2">
-                                <span className="text-[9px] font-bold uppercase tracking-widest block mb-1" style={{ color: item.color }}>{item.subtitle}</span>
-                                <h3 className="text-sm font-bold text-gray-800 group-hover:text-[#064E3B] transition-colors font-playfair leading-tight mb-1">{item.title}</h3>
-                                <p className="text-[10px] text-gray-500 font-medium leading-relaxed line-clamp-2 w-[90%]">{item.description}</p>
+                            <div className="relative z-10 mt-3 md:mt-2">
+                                <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest block mb-1" style={{ color: item.color }}>{item.subtitle}</span>
+                                <h3 className="text-base md:text-lg font-bold text-gray-800 group-hover:text-[#064E3B] transition-colors font-playfair leading-tight mb-1">{item.title}</h3>
+                                <p className="text-[10px] md:text-xs text-gray-500 font-medium leading-relaxed line-clamp-2 w-[90%]">{item.description}</p>
                             </div>
 
                             {/* Hover Arrow */}
-                            <div className="absolute bottom-5 right-5 w-6 h-6 bg-white rounded-full shadow-md flex items-center justify-center text-[#064E3B] opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-300 z-20">
+                            <div className="absolute bottom-5 right-5 w-6 h-6 bg-white rounded-full shadow-md flex items-center justify-center text-[#064E3B] opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-300 z-20 hidden md:flex">
                                 <ChevronRight size={12} />
                             </div>
                         </button>

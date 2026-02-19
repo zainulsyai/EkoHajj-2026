@@ -141,60 +141,62 @@ export const Visualization: React.FC = () => {
                 subtitle="Visualisasi mendalam mengenai performa ekosistem haji, distribusi layanan, dan pergerakan harga 2026."
                 currentDate={currentDate}
             >
-                {/* Time Filter Toggle */}
-                <div className="relative">
-                    <button 
-                        onClick={() => setIsFilterOpen(!isFilterOpen)}
-                        className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 text-white font-bold text-[10px] hover:bg-white/20 transition-all min-w-[140px] justify-between shadow-lg shadow-black/5"
-                    >
-                        <div className="flex items-center gap-2">
-                            <div className="p-1 bg-[#D4AF37]/20 rounded-md">
-                                <Filter size={12} className="text-[#D4AF37]" />
+                <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
+                    {/* Time Filter Toggle */}
+                    <div className="relative flex-1 sm:flex-none">
+                        <button 
+                            onClick={() => setIsFilterOpen(!isFilterOpen)}
+                            className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-2 rounded-xl border border-white/20 text-white font-bold text-[10px] hover:bg-white/20 transition-all w-full sm:min-w-[140px] justify-between shadow-lg shadow-black/5"
+                        >
+                            <div className="flex items-center gap-2">
+                                <div className="p-1 bg-[#D4AF37]/20 rounded-md">
+                                    <Filter size={12} className="text-[#D4AF37]" />
+                                </div>
+                                <div className="flex flex-col items-start text-left">
+                                    <span className="text-[8px] text-emerald-100/70 font-normal uppercase tracking-wider leading-none mb-0.5">Filter</span>
+                                    <span className="leading-none truncate max-w-[80px] sm:max-w-none">{filterLabel[timeFilter]}</span>
+                                </div>
                             </div>
-                            <div className="flex flex-col items-start">
-                                <span className="text-[8px] text-emerald-100/70 font-normal uppercase tracking-wider leading-none mb-0.5">Filter Waktu</span>
-                                <span className="leading-none">{filterLabel[timeFilter]}</span>
-                            </div>
-                        </div>
-                        <ChevronDown size={14} className={`text-emerald-200 transition-transform duration-300 ${isFilterOpen ? 'rotate-180' : ''}`} />
-                    </button>
+                            <ChevronDown size={14} className={`text-emerald-200 transition-transform duration-300 ${isFilterOpen ? 'rotate-180' : ''}`} />
+                        </button>
 
-                    {isFilterOpen && (
-                        <div className="absolute top-full left-0 mt-2 w-48 bg-white/95 backdrop-blur-xl border border-white/40 rounded-xl shadow-2xl z-50 overflow-hidden animate-fade-in-up origin-top-left">
-                            <div className="p-1">
-                                {(['all', 'today', 'week', 'month'] as const).map((key) => (
-                                    <button
-                                        key={key}
-                                        onClick={() => {
-                                            setTimeFilter(key);
-                                            setIsFilterOpen(false);
-                                        }}
-                                        className={`w-full text-left px-3 py-2.5 rounded-lg text-[10px] font-bold transition-all flex items-center justify-between group
-                                            ${timeFilter === key 
-                                                ? 'bg-[#064E3B]/5 text-[#064E3B]' 
-                                                : 'text-gray-500 hover:bg-gray-50 hover:text-[#064E3B]'}`}
-                                    >
-                                        <span className="flex items-center gap-2">
-                                            {timeFilter === key ? <Check size={12} className="text-[#D4AF37]" /> : <span className="w-3"></span>}
-                                            {filterLabel[key]}
-                                        </span>
-                                        {timeFilter === key && <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></div>}
-                                    </button>
-                                ))}
+                        {isFilterOpen && (
+                            <div className="absolute top-full left-0 mt-2 w-full sm:w-48 bg-white/95 backdrop-blur-xl border border-white/40 rounded-xl shadow-2xl z-50 overflow-hidden animate-fade-in-up origin-top-left">
+                                <div className="p-1">
+                                    {(['all', 'today', 'week', 'month'] as const).map((key) => (
+                                        <button
+                                            key={key}
+                                            onClick={() => {
+                                                setTimeFilter(key);
+                                                setIsFilterOpen(false);
+                                            }}
+                                            className={`w-full text-left px-3 py-2.5 rounded-lg text-[10px] font-bold transition-all flex items-center justify-between group
+                                                ${timeFilter === key 
+                                                    ? 'bg-[#064E3B]/5 text-[#064E3B]' 
+                                                    : 'text-gray-500 hover:bg-gray-50 hover:text-[#064E3B]'}`}
+                                        >
+                                            <span className="flex items-center gap-2">
+                                                {timeFilter === key ? <Check size={12} className="text-[#D4AF37]" /> : <span className="w-3"></span>}
+                                                {filterLabel[key]}
+                                            </span>
+                                            {timeFilter === key && <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></div>}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* Status Badge */}
-                <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 h-full min-h-[38px]">
-                    <div className="text-right">
-                        <p className="text-[8px] text-emerald-100 uppercase tracking-wide">Status Data</p>
-                        <p className="text-[10px] font-bold text-white leading-none">Live Monitoring</p>
+                        )}
                     </div>
-                    <div className="relative w-2.5 h-2.5 flex items-center justify-center">
-                        <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
-                        <span className="relative w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]"></span>
+
+                    {/* Status Badge */}
+                    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10 h-full min-h-[38px] flex-shrink-0">
+                        <div className="text-right">
+                            <p className="text-[8px] text-emerald-100 uppercase tracking-wide hidden sm:block">Status Data</p>
+                            <p className="text-[10px] font-bold text-white leading-none">Live<span className="hidden sm:inline"> Monitoring</span></p>
+                        </div>
+                        <div className="relative w-2 h-2 flex items-center justify-center">
+                            <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
+                            <span className="relative w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]"></span>
+                        </div>
                     </div>
                 </div>
             </HeroSection>
@@ -210,10 +212,10 @@ export const Visualization: React.FC = () => {
                         className="!bg-white/70 h-full min-h-[400px]"
                         action={<div className="p-2 bg-emerald-50 rounded-lg text-emerald-700"><BarChart3 size={18}/></div>}
                     >
-                        <div className="h-[350px] mt-4 w-full">
+                        <div className="h-[300px] md:h-[350px] mt-4 w-full">
                              {isLoading ? <ChartSkeleton /> : (
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={dataPriceComparison} margin={{ top: 20, right: 30, left: 10, bottom: 5 }} barGap={2}>
+                                    <BarChart data={dataPriceComparison} margin={{ top: 20, right: 10, left: 0, bottom: 5 }} barGap={2}>
                                         <defs>
                                             <linearGradient id="gradMakkah" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="0%" stopColor={COLORS.primary} stopOpacity={1}/>
@@ -225,13 +227,13 @@ export const Visualization: React.FC = () => {
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-                                        <XAxis dataKey="name" fontSize={11} stroke="#6B7280" tickLine={false} axisLine={false} dy={10} fontWeight={500} />
-                                        <YAxis fontSize={11} stroke="#6B7280" tickLine={false} axisLine={false} />
+                                        <XAxis dataKey="name" fontSize={10} stroke="#6B7280" tickLine={false} axisLine={false} dy={10} fontWeight={500} interval={0} angle={-15} textAnchor="end" height={60} />
+                                        <YAxis fontSize={10} stroke="#6B7280" tickLine={false} axisLine={false} />
                                         <Tooltip cursor={{fill: '#F3F4F6', radius: 8}} content={<CustomTooltip unit="SAR" />} />
-                                        <Legend iconType="circle" wrapperStyle={{paddingTop: '20px'}} />
+                                        <Legend iconType="circle" wrapperStyle={{paddingTop: '10px', fontSize: '11px'}} />
                                         
-                                        <Bar dataKey="makkah" name="Makkah" fill="url(#gradMakkah)" radius={[6, 6, 0, 0]} barSize={24} />
-                                        <Bar dataKey="madinah" name="Madinah" fill="url(#gradMadinah)" radius={[6, 6, 0, 0]} barSize={24} />
+                                        <Bar dataKey="makkah" name="Makkah" fill="url(#gradMakkah)" radius={[6, 6, 0, 0]} barSize={20} />
+                                        <Bar dataKey="madinah" name="Madinah" fill="url(#gradMadinah)" radius={[6, 6, 0, 0]} barSize={20} />
                                     </BarChart>
                                 </ResponsiveContainer>
                              )}
@@ -247,7 +249,7 @@ export const Visualization: React.FC = () => {
                         className="!bg-white/70 h-full min-h-[400px]"
                         action={<div className="p-2 bg-blue-50 rounded-lg text-blue-700"><Radio size={18}/></div>}
                     >
-                        <div className="h-[350px] mt-4 relative flex items-center justify-center">
+                        <div className="h-[300px] md:h-[350px] mt-4 relative flex items-center justify-center">
                             {isLoading ? <PieSkeleton /> : (
                                 <>
                                     <ResponsiveContainer width="100%" height="100%">
@@ -256,8 +258,8 @@ export const Visualization: React.FC = () => {
                                                 data={dataTelcoShare} 
                                                 cx="50%" 
                                                 cy="50%" 
-                                                innerRadius={80} 
-                                                outerRadius={110} 
+                                                innerRadius={60} 
+                                                outerRadius={90} 
                                                 paddingAngle={5} 
                                                 dataKey="value"
                                                 cornerRadius={8}
@@ -268,12 +270,12 @@ export const Visualization: React.FC = () => {
                                                 ))}
                                             </Pie>
                                             <Tooltip content={<CustomTooltip />} />
-                                            <Legend layout="horizontal" verticalAlign="bottom" align="center" iconType="circle" wrapperStyle={{fontSize: '11px', fontWeight: 600}} />
+                                            <Legend layout="horizontal" verticalAlign="bottom" align="center" iconType="circle" wrapperStyle={{fontSize: '10px', fontWeight: 600}} />
                                         </PieChart>
                                     </ResponsiveContainer>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
-                                        <span className="text-4xl font-bold text-[#064E3B] font-playfair">{dataTelcoShare.length}</span>
-                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Provider</span>
+                                        <span className="text-3xl md:text-4xl font-bold text-[#064E3B] font-playfair">{dataTelcoShare.length}</span>
+                                        <span className="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Provider</span>
                                     </div>
                                 </>
                             )}

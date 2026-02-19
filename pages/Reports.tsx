@@ -391,71 +391,172 @@ export const Reports: React.FC = () => {
       }
   }
 
+  const renderMobileCards = () => {
+      if (isLoading) {
+          return <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">{[...Array(4)].map((_, i) => <div key={i} className="h-48 bg-gray-100 rounded-2xl animate-pulse" />)}</div>;
+      }
+
+      if (processedData.length === 0) {
+          return (
+              <div className="flex flex-col items-center justify-center p-12 text-center text-gray-400 lg:hidden bg-gray-50/50 rounded-3xl border border-dashed border-gray-200">
+                  <Search size={40} className="mb-3 opacity-50" />
+                  <p className="font-bold text-base text-gray-600">Data tidak ditemukan.</p>
+                  <p className="text-xs text-gray-400 mt-1">Coba ubah filter atau kata kunci pencarian.</p>
+              </div>
+          );
+      }
+
+      return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
+              {processedData.map((row: any, idx) => (
+                  <div key={idx} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group relative overflow-hidden">
+                      {/* Decoration */}
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-bl-full -mr-4 -mt-4 opacity-50 group-hover:scale-110 transition-transform"></div>
+
+                      {/* Header: Main Title & Status/Price */}
+                      <div className="flex justify-between items-start gap-3 relative z-10 mb-4">
+                          <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                  <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                                      {activeTab === 'bumbu' ? 'Bumbu' : 
+                                       activeTab === 'beras' ? 'Beras' : 
+                                       activeTab === 'rte' ? 'RTE' : 
+                                       activeTab === 'tenant' ? 'Tenant' : 
+                                       activeTab === 'ekspedisi' ? 'Ekspedisi' : 'Telco'}
+                                  </span>
+                                  {row.date && <span className="text-[9px] text-gray-400 flex items-center gap-1"><Clock size={8} /> {row.date}</span>}
+                              </div>
+                              <h4 className="font-bold text-gray-800 text-base leading-tight line-clamp-2">
+                                  {row.name || row.companyName || row.shopName || row.providerName}
+                              </h4>
+                              <p className="text-xs text-gray-500 mt-1 font-medium line-clamp-1">
+                                  {row.kitchenName || row.riceType || row.menu || row.hotelName || row.respondentName || row.companyName}
+                              </p>
+                          </div>
+                          
+                          {/* Price or Status Badge */}
+                          <div className="flex flex-col items-end gap-1">
+                              {(row.price || row.rentCost || row.pricePerKg) && (
+                                  <span className="text-xs font-bold text-[#D4AF37] bg-[#D4AF37]/10 px-2.5 py-1.5 rounded-lg whitespace-nowrap border border-[#D4AF37]/20">
+                                      SAR {row.price || row.rentCost || row.pricePerKg}
+                                  </span>
+                              )}
+                              {activeTab === 'telco' && (
+                                  <span className={`text-[10px] font-bold px-2 py-1 rounded-lg border ${row.roamingPackage ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-gray-50 text-gray-400 border-gray-100'}`}>
+                                      {row.roamingPackage ? 'Terisi' : 'Kosong'}
+                                  </span>
+                              )}
+                          </div>
+                      </div>
+
+                      {/* Details Grid */}
+                      <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-xs text-gray-600 border-t border-gray-50 pt-4 relative z-10">
+                          
+                          {/* Location / Origin */}
+                          {(row.loc || row.location || row.address || row.province || row.originProduct) && (
+                              <div className="col-span-2 flex items-start gap-2">
+                                  <div className="p-1 bg-gray-50 rounded text-gray-400 mt-0.5"><MapPin size={10} /></div>
+                                  <span className="line-clamp-2 leading-relaxed text-gray-600">
+                                      {row.loc || row.location || row.address || row.province}
+                                      {row.originProduct && <span className="text-gray-500"> (Asal: {row.originProduct})</span>}
+                                  </span>
+                              </div>
+                          )}
+                          
+                          {/* Volume / Weight / Package / Product */}
+                          <div className="flex items-center gap-2">
+                              <div className="p-1 bg-gray-50 rounded text-gray-400"><Building size={10} /></div>
+                              <span className="truncate font-medium">
+                                  {row.volume ? `${row.volume} ${activeTab === 'rte' ? 'Porsi' : 'Ton'}` : 
+                                   row.weight ? `${row.weight} Kg` : 
+                                   row.roamingPackage ? row.roamingPackage :
+                                   row.productType ? row.productType : '-'}
+                              </span>
+                          </div>
+
+                          {/* PIC / Surveyor */}
+                          <div className="flex items-center gap-2">
+                              <div className="p-1 bg-gray-50 rounded text-gray-400"><User size={10} /></div>
+                              <span className="truncate">{row.pic || row.surveyor || '-'}</span>
+                          </div>
+                      </div>
+                  </div>
+              ))}
+          </div>
+      );
+  };
+
   const renderTable = () => {
     return (
-        <div className="overflow-hidden rounded-2xl border border-gray-200/50">
-            <table className="w-full text-sm">
-                <thead className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
-                    <tr>
-                        {activeTab === 'bumbu' && (
-                            <>
-                                <TableHeader>Jenis Bumbu</TableHeader>
-                                <TableHeader>Detail Dapur & PIC</TableHeader>
-                                <TableHeader>Data Bumbu</TableHeader>
-                                <TableHeader>Harga (SAR)</TableHeader>
-                                <TableHeader>Surveyor & Waktu</TableHeader>
-                            </>
-                        )}
-                        {activeTab === 'beras' && (
-                            <>
-                                <TableHeader>Perusahaan</TableHeader>
-                                <TableHeader>Jenis & Volume</TableHeader>
-                                <TableHeader>Harga (SAR)</TableHeader>
-                                <TableHeader>Asal Produk</TableHeader>
-                                <TableHeader>Surveyor & Waktu</TableHeader>
-                            </>
-                        )}
-                        {activeTab === 'rte' && (
-                            <>
-                                <TableHeader>Perusahaan</TableHeader>
-                                <TableHeader>Menu / Jenis</TableHeader>
-                                <TableHeader>Lokasi & PIC</TableHeader>
-                                <TableHeader>Volume & Harga</TableHeader>
-                                <TableHeader>Surveyor & Waktu</TableHeader>
-                            </>
-                        )}
-                        {activeTab === 'tenant' && (
-                            <>
-                                <TableHeader>Nama Toko</TableHeader>
-                                <TableHeader>Lokasi Hotel & PIC</TableHeader>
-                                <TableHeader>Produk Utama</TableHeader>
-                                <TableHeader>Biaya Sewa</TableHeader>
-                                <TableHeader>Surveyor & Waktu</TableHeader>
-                            </>
-                        )}
-                        {activeTab === 'ekspedisi' && (
-                            <>
-                                <TableHeader>Perusahaan</TableHeader>
-                                <TableHeader>Lokasi Asal & PIC</TableHeader>
-                                <TableHeader>Berat (Kg)</TableHeader>
-                                <TableHeader>Harga / Kg</TableHeader>
-                                <TableHeader>Surveyor & Waktu</TableHeader>
-                            </>
-                        )}
-                        {activeTab === 'telco' && (
-                            <>
-                                <TableHeader>Provider</TableHeader>
-                                <TableHeader>Identitas Jemaah</TableHeader>
-                                <TableHeader>Paket Roaming</TableHeader>
-                                <TableHeader>Status</TableHeader>
-                                <TableHeader>Surveyor & Waktu</TableHeader>
-                            </>
-                        )}
-                    </tr>
-                </thead>
-                {renderTableBody()}
-            </table>
-        </div>
+        <>
+            {/* Desktop Table - Hidden on Mobile & Tablet (lg and below) */}
+            <div className="hidden lg:block overflow-hidden rounded-2xl border border-gray-200/50">
+                <table className="w-full text-sm">
+                    <thead className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
+                        <tr>
+                            {activeTab === 'bumbu' && (
+                                <>
+                                    <TableHeader>Jenis Bumbu</TableHeader>
+                                    <TableHeader>Detail Dapur & PIC</TableHeader>
+                                    <TableHeader>Data Bumbu</TableHeader>
+                                    <TableHeader>Harga (SAR)</TableHeader>
+                                    <TableHeader>Surveyor & Waktu</TableHeader>
+                                </>
+                            )}
+                            {activeTab === 'beras' && (
+                                <>
+                                    <TableHeader>Perusahaan</TableHeader>
+                                    <TableHeader>Jenis & Volume</TableHeader>
+                                    <TableHeader>Harga (SAR)</TableHeader>
+                                    <TableHeader>Asal Produk</TableHeader>
+                                    <TableHeader>Surveyor & Waktu</TableHeader>
+                                </>
+                            )}
+                            {activeTab === 'rte' && (
+                                <>
+                                    <TableHeader>Perusahaan</TableHeader>
+                                    <TableHeader>Menu / Jenis</TableHeader>
+                                    <TableHeader>Lokasi & PIC</TableHeader>
+                                    <TableHeader>Volume & Harga</TableHeader>
+                                    <TableHeader>Surveyor & Waktu</TableHeader>
+                                </>
+                            )}
+                            {activeTab === 'tenant' && (
+                                <>
+                                    <TableHeader>Nama Toko</TableHeader>
+                                    <TableHeader>Lokasi Hotel & PIC</TableHeader>
+                                    <TableHeader>Produk Utama</TableHeader>
+                                    <TableHeader>Biaya Sewa</TableHeader>
+                                    <TableHeader>Surveyor & Waktu</TableHeader>
+                                </>
+                            )}
+                            {activeTab === 'ekspedisi' && (
+                                <>
+                                    <TableHeader>Perusahaan</TableHeader>
+                                    <TableHeader>Lokasi Asal & PIC</TableHeader>
+                                    <TableHeader>Berat (Kg)</TableHeader>
+                                    <TableHeader>Harga / Kg</TableHeader>
+                                    <TableHeader>Surveyor & Waktu</TableHeader>
+                                </>
+                            )}
+                            {activeTab === 'telco' && (
+                                <>
+                                    <TableHeader>Provider</TableHeader>
+                                    <TableHeader>Identitas Jemaah</TableHeader>
+                                    <TableHeader>Paket Roaming</TableHeader>
+                                    <TableHeader>Status</TableHeader>
+                                    <TableHeader>Surveyor & Waktu</TableHeader>
+                                </>
+                            )}
+                        </tr>
+                    </thead>
+                    {renderTableBody()}
+                </table>
+            </div>
+
+            {/* Mobile Cards */}
+            {renderMobileCards()}
+        </>
     );
   };
 
@@ -474,26 +575,28 @@ export const Reports: React.FC = () => {
             subtitle="Arsip lengkap dan rekapitulasi data real-time untuk kebutuhan pelaporan, audit, dan evaluasi layanan."
             currentDate={currentDate}
         >
-             <div className="flex items-center gap-3">
-                 <button className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-[10px] font-bold text-white hover:bg-white/20 transition-all shadow-lg group">
-                     <Printer size={14} className="text-emerald-200 group-hover:text-white transition-colors" /> Print Laporan
-                 </button>
-                 <button className="flex items-center gap-2 px-4 py-2 bg-[#D4AF37] text-[#064E3B] rounded-xl text-[10px] font-bold hover:bg-[#b08d24] hover:text-white shadow-lg shadow-[#D4AF37]/20 transition-all transform hover:-translate-y-0.5">
-                     <Download size={14} /> Export CSV
-                 </button>
-             </div>
+             <div className="flex flex-row items-center gap-2 w-full sm:w-auto overflow-x-auto no-scrollbar">
+                 <div className="flex items-center gap-2 flex-shrink-0">
+                     <button className="flex items-center gap-2 px-3 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-[10px] font-bold text-white hover:bg-white/20 transition-all shadow-lg group whitespace-nowrap">
+                         <Printer size={14} className="text-emerald-200 group-hover:text-white transition-colors" /> <span className="hidden sm:inline">Print Laporan</span><span className="sm:hidden">Print</span>
+                     </button>
+                     <button className="flex items-center gap-2 px-3 py-2 bg-[#D4AF37] text-[#064E3B] rounded-xl text-[10px] font-bold hover:bg-[#b08d24] hover:text-white shadow-lg shadow-[#D4AF37]/20 transition-all transform hover:-translate-y-0.5 whitespace-nowrap">
+                         <Download size={14} /> <span className="hidden sm:inline">Export CSV</span><span className="sm:hidden">CSV</span>
+                     </button>
+                 </div>
 
-             {/* Status Badge */}
-             <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 h-full min-h-[38px]">
-                <div className="text-right">
-                    <p className="text-[8px] text-emerald-100 uppercase tracking-wide">Status Data</p>
-                    <p className="text-[10px] font-bold text-white leading-none">Live Monitoring</p>
-                </div>
-                <div className="relative w-2.5 h-2.5 flex items-center justify-center">
-                    <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
-                    <span className="relative w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]"></span>
-                </div>
-            </div>
+                 {/* Status Badge */}
+                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10 h-full min-h-[38px] flex-shrink-0 ml-auto sm:ml-0">
+                    <div className="text-right">
+                        <p className="text-[8px] text-emerald-100 uppercase tracking-wide hidden sm:block">Status Data</p>
+                        <p className="text-[10px] font-bold text-white leading-none">Live<span className="hidden sm:inline"> Monitoring</span></p>
+                    </div>
+                    <div className="relative w-2 h-2 flex items-center justify-center">
+                        <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
+                        <span className="relative w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]"></span>
+                    </div>
+                 </div>
+             </div>
         </HeroSection>
 
         {/* Tab Navigation - Premium Pill Style */}
@@ -523,10 +626,10 @@ export const Reports: React.FC = () => {
         {/* Data Table Card */}
         <GlassCard className="min-h-[500px] !bg-white/70">
             {/* Filters Row */}
-            <div className="flex flex-col md:flex-row justify-between items-center mb-6 px-1 gap-4">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 px-1 gap-4">
                 
                 {/* LEFT: Search & Filter Group */}
-                <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
                     
                     {/* Search Bar */}
                     <div className="relative group w-full sm:w-60">
@@ -544,20 +647,20 @@ export const Reports: React.FC = () => {
                     </div>
 
                     {/* Filter Dropdown - Compact */}
-                    <div className="relative w-full sm:w-auto">
+                    <div className="relative w-full sm:w-auto min-w-[140px]">
                         <button 
                             onClick={() => setIsFilterOpen(!isFilterOpen)}
-                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all text-[11px] font-bold uppercase tracking-wide w-full sm:w-auto justify-between min-w-[120px]
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all text-[11px] font-bold uppercase tracking-wide w-full justify-between
                             ${isFilterOpen || filterMode !== 'newest' ? 'bg-[#064E3B] text-white border-[#064E3B] shadow-lg' : 'bg-white text-gray-500 border-gray-200 hover:border-[#064E3B]'}`}
                         >
                             <div className="flex items-center gap-2">
                                     <ArrowDownUp size={14} />
-                                    <span>{filterOptions.find(f => f.id === filterMode)?.label.split(' ')[0] || 'Filter'}</span>
+                                    <span className="truncate">{filterOptions.find(f => f.id === filterMode)?.label.split(' ')[0] || 'Filter'}</span>
                             </div>
                             <ChevronDown size={14} className={`transition-transform duration-300 ${isFilterOpen ? 'rotate-180' : ''}`} />
                         </button>
                         
-                        <div className={`absolute top-full left-0 mt-2 w-full md:w-48 bg-white border border-gray-100 rounded-xl shadow-2xl z-50 overflow-hidden transition-all duration-200 ease-out origin-top-left transform ${isFilterOpen ? 'opacity-100 scale-100 translate-y-0 visible' : 'opacity-0 scale-95 -translate-y-2 invisible pointer-events-none'}`}>
+                        <div className={`absolute top-full left-0 mt-2 w-full sm:w-48 bg-white border border-gray-100 rounded-xl shadow-2xl z-50 overflow-hidden transition-all duration-200 ease-out origin-top-left transform ${isFilterOpen ? 'opacity-100 scale-100 translate-y-0 visible' : 'opacity-0 scale-95 -translate-y-2 invisible pointer-events-none'}`}>
                             <div className="p-1.5">
                                 {filterOptions.map((opt) => (
                                     <button
@@ -581,7 +684,7 @@ export const Reports: React.FC = () => {
                 </div>
 
                 {/* RIGHT: Total Record - Compact */}
-                <div className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg shadow-sm w-full md:w-auto justify-center md:justify-start">
+                <div className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg shadow-sm w-full lg:w-auto justify-center lg:justify-start">
                     <div className="p-1 bg-[#064E3B]/10 rounded-md text-[#064E3B]">
                             <Database size={12} />
                     </div>
@@ -593,7 +696,7 @@ export const Reports: React.FC = () => {
 
             </div>
 
-            <div className="overflow-x-auto pb-4">
+            <div className="overflow-x-auto pb-4 -mx-5 md:-mx-8 px-5 md:px-8">
                 {renderTable()}
             </div>
 

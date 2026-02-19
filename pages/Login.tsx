@@ -26,13 +26,13 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
     <div className="min-h-screen w-full flex items-center justify-center bg-[#064E3B] relative overflow-hidden font-sans">
       
       {/* --- BACKGROUND ASSETS (Matching Dashboard Hero/Sidebar) --- */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {/* Noise Texture */}
           <div className="absolute inset-0 opacity-10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
           
           {/* Gradient Orbs */}
-          <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-[#10B981] rounded-full blur-[120px] opacity-20 animate-pulse"></div>
-          <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-[#D4AF37] rounded-full blur-[100px] opacity-20 animate-pulse delay-1000"></div>
+          <div className="absolute top-[-10%] left-[-10%] w-[80vw] md:w-[50vw] h-[80vw] md:h-[50vw] bg-[#10B981] rounded-full blur-[80px] md:blur-[120px] opacity-20 animate-pulse"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[80vw] md:w-[50vw] h-[80vw] md:h-[50vw] bg-[#D4AF37] rounded-full blur-[80px] md:blur-[100px] opacity-20 animate-pulse delay-1000"></div>
           
           {/* Islamic Geometric Pattern Overlay (Subtle) */}
           <div className="absolute inset-0 opacity-5" style={{ 
@@ -42,24 +42,24 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
       </div>
 
       {/* --- LOGIN CARD (Matching Dashboard GlassCard Style) --- */}
-      <div className="w-full max-w-md px-6 relative z-10 animate-fade-in-up">
+      <div className="w-full max-w-md px-4 md:px-6 relative z-10 animate-fade-in-up">
         
         {/* Card Container - White Glass to match Dashboard Cards */}
-        <div className="bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-white/50 overflow-hidden relative">
+        <div className="bg-white/90 backdrop-blur-2xl rounded-[2rem] md:rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-white/50 overflow-hidden relative">
             
             {/* Top Decoration */}
             <div className="h-2 w-full bg-gradient-to-r from-[#064E3B] via-[#10B981] to-[#D4AF37]"></div>
 
-            <div className="p-8 md:p-10">
+            <div className="p-6 md:p-10">
                 {/* Header */}
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#064E3B] text-white shadow-xl shadow-[#064E3B]/20 mb-4 ring-4 ring-[#064E3B]/5 transform rotate-3">
-                        <Building2 size={32} />
+                <div className="text-center mb-6 md:mb-8">
+                    <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-[#064E3B] text-white shadow-xl shadow-[#064E3B]/20 mb-4 ring-4 ring-[#064E3B]/5 transform rotate-3">
+                        <Building2 size={28} className="md:w-8 md:h-8" />
                     </div>
-                    <h1 className="text-3xl font-bold text-[#064E3B] font-playfair mb-1">
+                    <h1 className="text-2xl md:text-3xl font-bold text-[#064E3B] font-playfair mb-1">
                         EkoHajj <span className="text-[#D4AF37]">2026</span>
                     </h1>
-                    <p className="text-xs font-bold text-gray-400 tracking-[0.2em] uppercase">
+                    <p className="text-[10px] md:text-xs font-bold text-gray-400 tracking-[0.2em] uppercase">
                         Sistem Monitoring Terintegrasi
                     </p>
                 </div>
@@ -71,14 +71,14 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                         <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Username / ID Panitia</label>
                         <div className="relative group">
                             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#064E3B] transition-colors">
-                                <User size={18} />
+                                <User size={20} className="md:w-[18px] md:h-[18px]" />
                             </div>
                             <input 
                                 type="text" 
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 placeholder="Masukkan Username / ID Panitia"
-                                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-11 pr-4 text-sm font-semibold text-gray-800 placeholder-gray-400 focus:bg-white focus:border-[#064E3B] focus:ring-4 focus:ring-[#064E3B]/10 outline-none transition-all"
+                                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-11 pr-4 text-base md:text-sm font-semibold text-gray-800 placeholder-gray-400 focus:bg-white focus:border-[#064E3B] focus:ring-4 focus:ring-[#064E3B]/10 outline-none transition-all"
                             />
                         </div>
                     </div>
@@ -87,21 +87,21 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Password</label>
                          <div className="relative group">
                             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#064E3B] transition-colors">
-                                <Lock size={18} />
+                                <Lock size={20} className="md:w-[18px] md:h-[18px]" />
                             </div>
                             <input 
                                 type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
-                                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-11 pr-12 text-sm font-semibold text-gray-800 placeholder-gray-400 focus:bg-white focus:border-[#064E3B] focus:ring-4 focus:ring-[#064E3B]/10 outline-none transition-all"
+                                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-11 pr-12 text-base md:text-sm font-semibold text-gray-800 placeholder-gray-400 focus:bg-white focus:border-[#064E3B] focus:ring-4 focus:ring-[#064E3B]/10 outline-none transition-all"
                             />
                             <button 
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                             >
-                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                {showPassword ? <EyeOff size={20} className="md:w-[18px] md:h-[18px]" /> : <Eye size={20} className="md:w-[18px] md:h-[18px]" />}
                             </button>
                         </div>
                     </div>

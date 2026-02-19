@@ -8,30 +8,30 @@ import { ChartSkeleton, ListSkeleton, PieSkeleton, StatCardSkeleton } from '../c
 import { HeroSection } from '../components/HeroSection';
 
 const StatCard = ({ title, value, icon: Icon, color, trend, footer }: any) => (
-  <div className="relative overflow-hidden rounded-3xl p-6 border border-white/60 bg-white/60 backdrop-blur-sm shadow-sm hover:shadow-lg transition-all group h-[160px] flex flex-col justify-between">
+  <div className="relative overflow-hidden rounded-3xl p-5 md:p-6 border border-white/60 bg-white/60 backdrop-blur-sm shadow-sm hover:shadow-lg transition-all group min-h-[140px] md:h-[160px] flex flex-col justify-between">
     <div className={`absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none`} style={{ color: color }}>
-        <Icon size={80} />
+        <Icon size={80} className="w-20 h-20 md:w-24 md:h-24" />
     </div>
     
     {/* Header Section */}
     <div className="flex justify-between items-start relative z-10">
-        <div className={`p-3 rounded-2xl text-white shadow-md flex items-center justify-center group-hover:scale-105 transition-transform duration-300`} style={{ backgroundColor: color }}>
-            <Icon size={24} strokeWidth={2} />
+        <div className={`p-2.5 md:p-3 rounded-2xl text-white shadow-md flex items-center justify-center group-hover:scale-105 transition-transform duration-300`} style={{ backgroundColor: color }}>
+            <Icon size={20} strokeWidth={2} className="md:w-6 md:h-6" />
         </div>
         {trend && (
-            <span className="flex items-center text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">
-                <TrendingUp size={10} className="mr-1" /> {trend}
+            <span className="flex items-center text-[10px] md:text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100">
+                <TrendingUp size={12} className="mr-1" /> {trend}
             </span>
         )}
     </div>
 
     {/* Content Section */}
-    <div className="relative z-10">
-        <h3 className="text-2xl font-bold text-gray-800 font-playfair leading-none mb-1">{value}</h3>
-        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{title}</p>
+    <div className="relative z-10 mt-3 md:mt-0">
+        <h3 className="text-2xl md:text-3xl font-bold text-gray-800 font-playfair leading-none mb-1">{value}</h3>
+        <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest">{title}</p>
         
         {footer && (
-             <div className="mt-2 pt-2 border-t border-gray-200/50 flex items-center gap-2 text-[9px] text-gray-400 font-medium truncate opacity-80">
+             <div className="mt-2 pt-2 border-t border-gray-200/50 flex items-center gap-2 text-[10px] md:text-xs text-gray-400 font-medium truncate opacity-80">
                 {footer}
              </div>
         )}
@@ -242,56 +242,59 @@ export const Dashboard: React.FC<DashboardProps> = ({ statusFilter, onStatusFilt
         statusFilter={statusFilter}
         onStatusFilterChange={onStatusFilterChange}
       >
-            <div className="relative">
-                <button 
-                    onClick={() => setIsFilterOpen(!isFilterOpen)}
-                    className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 text-white font-bold text-[10px] hover:bg-white/20 transition-all min-w-[140px] justify-between shadow-lg shadow-black/5"
-                >
-                    <div className="flex items-center gap-2">
-                        <div className="p-1 bg-[#D4AF37]/20 rounded-md">
-                            <Filter size={12} className="text-[#D4AF37]" />
+            <div className="flex flex-row items-center gap-2 w-full sm:w-auto">
+                <div className="relative flex-1 sm:flex-none">
+                    <button 
+                        onClick={() => setIsFilterOpen(!isFilterOpen)}
+                        className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-2 rounded-xl border border-white/20 text-white font-bold text-[10px] hover:bg-white/20 transition-all w-full sm:min-w-[140px] justify-between shadow-lg shadow-black/5"
+                    >
+                        <div className="flex items-center gap-2">
+                            <div className="p-1 bg-[#D4AF37]/20 rounded-md">
+                                <Filter size={12} className="text-[#D4AF37]" />
+                            </div>
+                            <div className="flex flex-col items-start text-left">
+                                <span className="text-[8px] text-emerald-100/70 font-normal uppercase tracking-wider leading-none mb-0.5">Filter</span>
+                                <span className="leading-none truncate max-w-[80px] sm:max-w-none">{filterLabel[timeFilter]}</span>
+                            </div>
                         </div>
-                        <div className="flex flex-col items-start">
-                            <span className="text-[8px] text-emerald-100/70 font-normal uppercase tracking-wider leading-none mb-0.5">Filter Waktu</span>
-                            <span className="leading-none">{filterLabel[timeFilter]}</span>
+                        <ChevronDown size={14} className={`text-emerald-200 transition-transform duration-300 ${isFilterOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    {isFilterOpen && (
+                        <div className="absolute top-full left-0 mt-2 w-full sm:w-48 bg-white/95 backdrop-blur-xl border border-white/40 rounded-xl shadow-2xl z-50 overflow-hidden animate-fade-in-up origin-top-left">
+                            <div className="p-1">
+                                {(['all', 'today', 'week', 'month'] as const).map((key) => (
+                                    <button
+                                        key={key}
+                                        onClick={() => {
+                                            setTimeFilter(key);
+                                            setIsFilterOpen(false);
+                                        }}
+                                        className={`w-full text-left px-3 py-2.5 rounded-lg text-[10px] font-bold transition-all flex items-center justify-between group
+                                            ${timeFilter === key 
+                                                ? 'bg-[#064E3B]/5 text-[#064E3B]' 
+                                                : 'text-gray-500 hover:bg-gray-50 hover:text-[#064E3B]'}`}
+                                    >
+                                        <span className="flex items-center gap-2">
+                                            {timeFilter === key ? <Check size={12} className="text-[#D4AF37]" /> : <span className="w-3"></span>}
+                                            {filterLabel[key]}
+                                        </span>
+                                        {timeFilter === key && <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></div>}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                    <ChevronDown size={14} className={`text-emerald-200 transition-transform duration-300 ${isFilterOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {isFilterOpen && (
-                    <div className="absolute top-full left-0 mt-2 w-48 bg-white/95 backdrop-blur-xl border border-white/40 rounded-xl shadow-2xl z-50 overflow-hidden animate-fade-in-up origin-top-left">
-                        <div className="p-1">
-                            {(['all', 'today', 'week', 'month'] as const).map((key) => (
-                                <button
-                                    key={key}
-                                    onClick={() => {
-                                        setTimeFilter(key);
-                                        setIsFilterOpen(false);
-                                    }}
-                                    className={`w-full text-left px-3 py-2.5 rounded-lg text-[10px] font-bold transition-all flex items-center justify-between group
-                                        ${timeFilter === key 
-                                            ? 'bg-[#064E3B]/5 text-[#064E3B]' 
-                                            : 'text-gray-500 hover:bg-gray-50 hover:text-[#064E3B]'}`}
-                                >
-                                    <span className="flex items-center gap-2">
-                                        {timeFilter === key ? <Check size={12} className="text-[#D4AF37]" /> : <span className="w-3"></span>}
-                                        {filterLabel[key]}
-                                    </span>
-                                    {timeFilter === key && <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></div>}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </div>
-            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 h-full min-h-[38px]">
-                <div className="text-right">
-                    <p className="text-[8px] text-emerald-100 uppercase tracking-wide">Status Data</p>
-                    <p className="text-[10px] font-bold text-white leading-none">Live Monitoring</p>
+                    )}
                 </div>
-                <div className="relative w-2.5 h-2.5 flex items-center justify-center">
-                    <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
-                    <span className="relative w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]"></span>
+                
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10 h-full min-h-[38px] flex-shrink-0">
+                    <div className="text-right">
+                        <p className="text-[8px] text-emerald-100 uppercase tracking-wide hidden sm:block">Status Data</p>
+                        <p className="text-[10px] font-bold text-white leading-none">Live<span className="hidden sm:inline"> Monitoring</span></p>
+                    </div>
+                    <div className="relative w-2 h-2 flex items-center justify-center">
+                        <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
+                        <span className="relative w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]"></span>
+                    </div>
                 </div>
             </div>
       </HeroSection>
@@ -370,7 +373,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ statusFilter, onStatusFilt
                 className="!bg-white/70 h-full min-h-[400px]"
                 action={<div className="p-2 bg-emerald-50 rounded-lg text-emerald-700"><TrendingUp size={18}/></div>}
             >
-                <div className="h-[300px] w-full mt-4">
+                <div className="h-[250px] md:h-[300px] w-full mt-4">
                     {isLoading ? <ChartSkeleton /> : (
                         <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={dataBumbuTrend} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -426,7 +429,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ statusFilter, onStatusFilt
                 className="!bg-white/70 h-full min-h-[400px]"
                 action={<div className="p-2 bg-amber-50 rounded-lg text-amber-700"><PieIcon size={18}/></div>}
             >
-                <div className="h-[300px] w-full relative">
+                <div className="h-[250px] md:h-[300px] w-full relative">
                     {isLoading ? <PieSkeleton /> : (
                         rteChartData.length > 0 ? (
                             <>

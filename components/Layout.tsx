@@ -29,46 +29,55 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onNavigat
         onNavigate={onNavigate} 
         onLogout={onLogout}
         isOpen={sidebarOpen}
+        setIsOpen={setSidebarOpen}
       />
 
-      <div className={`relative z-10 transition-[margin-left] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${sidebarOpen ? 'ml-72' : 'ml-24'} min-h-screen flex flex-col will-change-[margin-left]`}>
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+            className="fixed inset-0 bg-black/50 z-20 md:hidden backdrop-blur-sm transition-opacity"
+            onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+
+      <div className={`relative z-10 transition-[margin-left] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ml-0 ${sidebarOpen ? 'md:ml-72' : 'md:ml-24'} min-h-screen flex flex-col will-change-[margin-left]`}>
         
         {/* Frosted Header */}
-        <header className="h-20 bg-white/70 backdrop-blur-md border-b border-white/40 px-8 flex items-center justify-between sticky top-0 z-20 shadow-sm transition-all">
+        <header className="h-16 md:h-20 bg-white/70 backdrop-blur-md border-b border-white/40 px-4 md:px-8 flex items-center justify-between sticky top-0 z-20 shadow-sm transition-all">
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
              <button 
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="p-2 text-gray-500 hover:text-[#D4AF37] transition-colors rounded-lg hover:bg-white/50"
+                className="p-2 text-gray-500 hover:text-[#D4AF37] transition-colors rounded-lg hover:bg-white/50 active:scale-95"
              >
                 <AlignLeft size={24} />
              </button>
              
              {/* Page Title */}
              <div className="animate-fade-in">
-                <h2 className="text-xl font-bold text-[#064E3B]">
-                    {currentPage === Page.DASHBOARD ? 'DASHBOARD EKOSISTEM EKONOMI HAJI' : currentPage.replace(/_/g, ' ').replace('FORM', '').trim()}
+                <h2 className="text-base md:text-xl font-bold text-[#064E3B] line-clamp-1">
+                    {currentPage === Page.DASHBOARD ? 'DASHBOARD EKOSISTEM' : currentPage.replace(/_/g, ' ').replace('FORM', '').trim()}
                 </h2>
-                <p className="text-xs text-gray-400 font-medium tracking-wide uppercase">Kementerian Haji dan Umrah RI</p>
+                <p className="text-[10px] md:text-xs text-gray-400 font-medium tracking-wide uppercase hidden sm:block">Kementerian Haji dan Umrah RI</p>
              </div>
           </div>
 
           {/* Right: Actions */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 md:gap-6">
             
-            <button className="relative p-2.5 bg-white/50 hover:bg-white rounded-xl border border-transparent hover:border-gray-200 text-gray-500 hover:text-[#064E3B] transition-all shadow-sm">
+            <button className="relative p-2 md:p-2.5 bg-white/50 hover:bg-white rounded-xl border border-transparent hover:border-gray-200 text-gray-500 hover:text-[#064E3B] transition-all shadow-sm">
               <Bell size={20} />
               <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
             
-            <div className="flex items-center gap-3 pl-4 border-l border-gray-200/60">
-                <div className="text-right hidden sm:block">
+            <div className="flex items-center gap-3 pl-3 md:pl-4 border-l border-gray-200/60">
+                <div className="text-right hidden md:block">
                     <p className="text-sm font-bold text-gray-800">Direktur Jenderal</p>
                     <p className="text-[10px] text-[#D4AF37] font-bold tracking-wider uppercase">Pengembangan Ekosistem</p>
                 </div>
-                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#064E3B] to-[#042f24] p-0.5 shadow-lg shadow-[#064E3B]/20 cursor-pointer hover:scale-105 transition-transform">
+                <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-gradient-to-br from-[#064E3B] to-[#042f24] p-0.5 shadow-lg shadow-[#064E3B]/20 cursor-pointer hover:scale-105 transition-transform">
                     <div className="w-full h-full rounded-full border-2 border-white/20 flex items-center justify-center">
-                        <User size={20} className="text-white" />
+                        <User size={18} className="text-white md:w-5 md:h-5" />
                     </div>
                 </div>
             </div>
@@ -76,15 +85,15 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onNavigat
         </header>
 
         {/* Content Area */}
-        <main className="p-8 flex-1 relative">
+        <main className="p-4 md:p-8 flex-1 relative overflow-x-hidden">
            {children}
         </main>
         
         {/* Footer - Dark Gray as per PDF Page 6 */}
-        <footer className="bg-[#1f2937]/90 backdrop-blur-md border-t border-white/10 py-6 px-8 mt-auto text-white">
-            <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-300">
+        <footer className="bg-[#1f2937]/90 backdrop-blur-md border-t border-white/10 py-6 px-4 md:px-8 mt-auto text-white">
+            <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-300 gap-4 text-center md:text-left">
                 <p>© 2026 Kementerian Haji dan Umrah RI. Hak Cipta Dilindungi.</p>
-                <div className="flex gap-6 mt-2 md:mt-0 font-medium">
+                <div className="flex gap-4 md:gap-6 font-medium text-xs md:text-sm">
                     <a href="#" className="hover:text-[#D4AF37] transition-colors">Bantuan</a>
                     <a href="#" className="hover:text-[#D4AF37] transition-colors">Kebijakan Privasi</a>
                     <a href="#" className="hover:text-[#D4AF37] transition-colors">Kontak Kami</a>

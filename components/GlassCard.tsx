@@ -17,16 +17,16 @@ export const GlassCard: React.FC<GlassCardProps> = ({ children, className = '', 
       <div className="absolute -inset-[100%] bg-gradient-to-r from-transparent via-white/10 to-transparent rotate-45 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 pointer-events-none"></div>
       
       {(title || subtitle) && (
-        <div className="px-8 py-6 border-b border-gray-100/50 flex items-start md:items-center justify-between relative z-10 bg-white/30">
+        <div className="px-5 py-4 md:px-8 md:py-6 border-b border-gray-100/50 flex flex-col sm:flex-row items-start sm:items-center justify-between relative z-10 bg-white/30 gap-4 sm:gap-0">
           <div className="space-y-1">
-             {title && <h3 className="text-lg font-bold text-[#064E3B] tracking-tight leading-tight">{title}</h3>}
-             {subtitle && <p className="text-xs font-medium text-gray-500 tracking-wide">{subtitle}</p>}
+             {title && <h3 className="text-lg md:text-xl font-bold text-[#064E3B] tracking-tight leading-tight">{title}</h3>}
+             {subtitle && <p className="text-xs md:text-sm font-medium text-gray-500 tracking-wide">{subtitle}</p>}
           </div>
-          {action && <div className="ml-4">{action}</div>}
+          {action && <div className="self-end sm:self-auto ml-0 sm:ml-4">{action}</div>}
         </div>
       )}
       
-      <div className="p-8 relative z-10">
+      <div className="p-5 md:p-8 relative z-10">
         {children}
       </div>
     </div>

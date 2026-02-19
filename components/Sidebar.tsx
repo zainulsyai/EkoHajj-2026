@@ -8,14 +8,24 @@ interface SidebarProps {
   onNavigate: (page: Page) => void;
   onLogout: () => void;
   isOpen: boolean;
+  setIsOpen?: (isOpen: boolean) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLogout, isOpen }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLogout, isOpen, setIsOpen }) => {
   const isDataActive = currentPage.toString().startsWith('FORM') || currentPage === Page.DATA_ENTRY_PORTAL;
 
+  const handleNavigate = (page: Page) => {
+    onNavigate(page);
+    // Close sidebar on mobile after navigation
+    if (window.innerWidth < 768 && setIsOpen) {
+        setIsOpen(false);
+    }
+  };
+
   return (
-    <aside className={`fixed left-0 top-0 h-full transition-[width] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] z-30 ${isOpen ? 'w-72' : 'w-24'} 
-       bg-[#064E3B] shadow-[10px_0_30px_rgba(0,0,0,0.15)] border-r border-white/5 flex flex-col overflow-hidden will-change-[width]`}>
+    <aside className={`fixed left-0 top-0 h-full transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] z-30 
+       ${isOpen ? 'translate-x-0 w-72' : '-translate-x-full md:translate-x-0 md:w-24'} 
+       bg-[#064E3B] shadow-[10px_0_30px_rgba(0,0,0,0.15)] border-r border-white/5 flex flex-col overflow-hidden will-change-[width,transform]`}>
        
       {/* Decorative Background Pattern */}
       <div className="absolute inset-0 z-0 opacity-5 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
@@ -48,7 +58,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLog
             icon={LayoutDashboard} 
             label="Beranda" 
             isActive={currentPage === Page.DASHBOARD} 
-            onClick={() => onNavigate(Page.DASHBOARD)} 
+            onClick={() => handleNavigate(Page.DASHBOARD)} 
             isOpen={isOpen}
         />
 
@@ -57,7 +67,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLog
             icon={BookOpen}
             label="Data Pengisian"
             isActive={isDataActive}
-            onClick={() => onNavigate(Page.DATA_ENTRY_PORTAL)}
+            onClick={() => handleNavigate(Page.DATA_ENTRY_PORTAL)}
             isOpen={isOpen}
         />
 
@@ -66,7 +76,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLog
             icon={BarChart3} 
             label="Laporan Otomatis" 
             isActive={currentPage === Page.REPORTS} 
-            onClick={() => onNavigate(Page.REPORTS)} 
+            onClick={() => handleNavigate(Page.REPORTS)} 
             isOpen={isOpen}
         />
 
@@ -75,7 +85,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLog
             icon={PieChart} 
             label="Grafik & Visualisasi" 
             isActive={currentPage === Page.VISUALIZATION} 
-            onClick={() => onNavigate(Page.VISUALIZATION)} 
+            onClick={() => handleNavigate(Page.VISUALIZATION)} 
             isOpen={isOpen}
         />
 
@@ -84,7 +94,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLog
             icon={Settings} 
             label="Pengaturan" 
             isActive={currentPage === Page.SETTINGS} 
-            onClick={() => onNavigate(Page.SETTINGS)} 
+            onClick={() => handleNavigate(Page.SETTINGS)} 
             isOpen={isOpen}
         />
       </nav>
@@ -110,7 +120,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLog
 const MenuItem = ({ icon: Icon, label, isActive, onClick, isOpen }: any) => (
     <button
         onClick={onClick}
-        className={`w-full flex items-center ${isOpen ? 'gap-3.5' : ''} p-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden group whitespace-nowrap
+        className={`w-full flex items-center ${isOpen ? 'gap-3.5' : ''} p-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden group whitespace-nowrap active:scale-95
             ${isActive 
                 ? 'bg-gradient-to-r from-[#ffffff]/10 to-transparent text-white border border-white/10 shadow-lg' 
                 : 'text-gray-400 hover:bg-white/5 hover:text-white border border-transparent hover:shadow-md'
