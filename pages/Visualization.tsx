@@ -192,9 +192,9 @@ export const Visualization: React.FC = () => {
                         <p className="text-[8px] text-emerald-100 uppercase tracking-wide">Status Data</p>
                         <p className="text-[10px] font-bold text-white leading-none">Live Monitoring</p>
                     </div>
-                    <div className="relative w-2 h-2">
-                        <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    <div className="relative w-2.5 h-2.5 flex items-center justify-center">
+                        <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
+                        <span className="relative w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]"></span>
                     </div>
                 </div>
             </HeroSection>

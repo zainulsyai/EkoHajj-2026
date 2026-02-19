@@ -284,7 +284,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ statusFilter, onStatusFilt
                     </div>
                 )}
             </div>
-
+            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 h-full min-h-[38px]">
+                <div className="text-right">
+                    <p className="text-[8px] text-emerald-100 uppercase tracking-wide">Status Data</p>
+                    <p className="text-[10px] font-bold text-white leading-none">Live Monitoring</p>
+                </div>
+                <div className="relative w-2.5 h-2.5 flex items-center justify-center">
+                    <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
+                    <span className="relative w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]"></span>
+                </div>
+            </div>
       </HeroSection>
 
       {/* 2. KPI CARDS - 3 Columns for 6 items */}

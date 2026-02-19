@@ -14,7 +14,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLog
   const isDataActive = currentPage.toString().startsWith('FORM') || currentPage === Page.DATA_ENTRY_PORTAL;
 
   return (
-    <aside className={`fixed left-0 top-0 h-full transition-[width] duration-500 ease-in-out z-30 ${isOpen ? 'w-72' : 'w-24'} 
+    <aside className={`fixed left-0 top-0 h-full transition-[width] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] z-30 ${isOpen ? 'w-72' : 'w-24'} 
        bg-[#064E3B] shadow-[10px_0_30px_rgba(0,0,0,0.15)] border-r border-white/5 flex flex-col overflow-hidden will-change-[width]`}>
        
       {/* Decorative Background Pattern */}
@@ -23,7 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLog
 
       {/* Brand Header */}
       <div className="h-24 flex items-center justify-start px-6 border-b border-white/10 relative z-10 bg-gradient-to-b from-[#064E3B] to-transparent overflow-hidden whitespace-nowrap">
-         <div className={`flex items-center gap-4 transition-transform duration-500 ease-in-out ${!isOpen ? 'translate-x-1' : ''}`}>
+         <div className={`flex items-center gap-4 transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${!isOpen ? 'translate-x-1' : ''}`}>
             {/* Logo */}
             <div className="relative w-12 h-12 flex-shrink-0 flex items-center justify-center group cursor-default">
                 <div className="absolute inset-0 bg-[#D4AF37] rounded-xl blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
@@ -35,7 +35,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLog
             </div>
             
             {/* Title */}
-            <div className={`leading-tight transition-all duration-500 ease-in-out ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10 absolute left-20 pointer-events-none'}`}>
+            <div className={`leading-tight transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10 absolute left-20 pointer-events-none'}`}>
                 <h1 className="font-bold text-xl tracking-tight text-white drop-shadow-md font-playfair">EkoHajj <span className="text-[#D4AF37]">2026</span></h1>
                 <span className="text-[9px] text-white/60 tracking-[0.2em] uppercase font-semibold block mt-0.5">System Dashboard</span>
             </div>
@@ -98,7 +98,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLog
             <div className="relative flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
                 <LogOut size={20} strokeWidth={2} />
             </div>
-            <span className={`font-medium text-sm tracking-wide transition-all duration-500 ease-in-out ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10 w-0'}`}>
+            <span className={`font-medium text-sm tracking-wide transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen ? 'opacity-100 translate-x-0 max-w-[200px]' : 'opacity-0 translate-x-10 max-w-0 overflow-hidden'}`}>
                 Keluar System
             </span>
         </button>
@@ -124,7 +124,7 @@ const MenuItem = ({ icon: Icon, label, isActive, onClick, isOpen }: any) => (
              <Icon size={20} strokeWidth={isActive ? 2.5 : 2} className={`transition-colors duration-300 ${isActive ? 'text-[#D4AF37] drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]' : 'group-hover:text-white'}`} />
         </div>
         
-        <span className={`text-sm tracking-wide transition-all duration-500 ease-in-out ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4 w-0 overflow-hidden'} ${isActive ? 'font-bold' : 'font-medium'}`}>
+        <span className={`text-sm tracking-wide transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen ? 'opacity-100 translate-x-0 max-w-[200px]' : 'opacity-0 translate-x-4 max-w-0 overflow-hidden'} ${isActive ? 'font-bold' : 'font-medium'}`}>
             {label}
         </span>
     </button>
