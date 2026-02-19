@@ -407,7 +407,7 @@ export const Reports: React.FC = () => {
       }
 
       return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden animate-fade-in-up">
               {processedData.map((row: any, idx) => (
                   <div key={idx} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group relative overflow-hidden">
                       {/* Decoration */}
