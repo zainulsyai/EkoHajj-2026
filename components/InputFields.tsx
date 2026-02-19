@@ -11,7 +11,7 @@ export const Input: React.FC<InputProps> = ({ label, className = '', ...props })
         <input
         className={`w-full bg-white/50 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3.5 text-gray-800 placeholder-gray-400 text-sm font-medium
             focus:outline-none focus:border-[#064E3B] focus:bg-white focus:ring-4 focus:ring-[#064E3B]/10 transition-all duration-300 shadow-sm 
-            hover:border-gray-300 hover:bg-white/80
+            hover:border-[#064E3B]/30 hover:bg-white/80 hover:shadow-md
             disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-100
             read-only:bg-gray-50 read-only:border-gray-200
             ${className}`}
@@ -47,7 +47,8 @@ export const Select: React.FC<SelectProps> = ({ label, options, className = '', 
     <div className="relative">
         <select
         className={`w-full bg-white/50 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3.5 text-gray-800 text-sm font-medium
-            focus:outline-none focus:border-[#064E3B] focus:bg-white focus:ring-4 focus:ring-[#064E3B]/10 transition-all duration-300 appearance-none shadow-sm hover:bg-white/80 cursor-pointer
+            focus:outline-none focus:border-[#064E3B] focus:bg-white focus:ring-4 focus:ring-[#064E3B]/10 transition-all duration-300 appearance-none shadow-sm 
+            hover:bg-white/80 hover:border-[#064E3B]/30 hover:shadow-md cursor-pointer
             ${className}`}
         {...props}
         >
