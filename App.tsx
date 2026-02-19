@@ -11,7 +11,7 @@ import { TenantForm } from './pages/forms/TenantForm';
 import { ExpeditionForm } from './pages/forms/ExpeditionForm';
 import { TelecomForm } from './pages/forms/TelecomForm';
 import { RiceForm } from './pages/forms/RiceForm';
-import { Page } from './types';
+import { Page, Status } from './types';
 import { GlassCard } from './components/GlassCard';
 import { Construction, Clock, ArrowLeft } from 'lucide-react';
 import { DataProvider } from './contexts/DataContext';
@@ -62,6 +62,7 @@ const PlaceholderPage: React.FC<{ title: string; onNavigate: (page: Page) => voi
 const AppContent: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>(Page.LOGIN);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<Status>(Status.ALL);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -84,7 +85,7 @@ const AppContent: React.FC = () => {
       case Page.DASHBOARD:
         return <Dashboard />;
       case Page.DATA_ENTRY_PORTAL:
-        return <DataEntryPortal onNavigate={setCurrentPage} />;
+        return <DataEntryPortal onNavigate={setCurrentPage} statusFilter={statusFilter} onStatusFilterChange={setStatusFilter} />;
       case Page.REPORTS:
         return <Reports />;
       case Page.VISUALIZATION:
@@ -111,7 +112,7 @@ const AppContent: React.FC = () => {
   if (!isAuthenticated) return <Login onLogin={handleLogin} />;
 
   return (
-    <Layout currentPage={currentPage} onNavigate={setCurrentPage} onLogout={handleLogout}>
+    <Layout currentPage={currentPage} onNavigate={setCurrentPage} onLogout={handleLogout} statusFilter={statusFilter} onStatusFilterChange={setStatusFilter}>
       {renderContent()}
     </Layout>
   );

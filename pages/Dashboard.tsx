@@ -61,7 +61,14 @@ const CustomTooltip = ({ active, payload, label, unit = '' }: any) => {
   return null;
 };
 
-export const Dashboard: React.FC = () => {
+import { Status } from '../types';
+
+interface DashboardProps {
+  statusFilter: Status;
+  onStatusFilterChange: (status: Status) => void;
+}
+
+export const Dashboard: React.FC<DashboardProps> = ({ statusFilter, onStatusFilterChange }) => {
   const currentDate = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const { bumbuMakkah, bumbuMadinah, rteData, expeditionData, tenantData, riceData, telecomData, isLoading } = useData();
 
@@ -232,6 +239,8 @@ export const Dashboard: React.FC = () => {
         title={<span>Ringkasan <span className="text-[#D4AF37]">Ekosistem 2026</span></span>}
         subtitle="Executive Summary realisasi layanan konsumsi, potensi ekonomi, dan logistik haji (Sinkronisasi Data Real-time)."
         currentDate={currentDate}
+        statusFilter={statusFilter}
+        onStatusFilterChange={onStatusFilterChange}
       >
             <div className="relative">
                 <button 
@@ -275,16 +284,7 @@ export const Dashboard: React.FC = () => {
                     </div>
                 )}
             </div>
-            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 h-full min-h-[38px]">
-                <div className="text-right">
-                    <p className="text-[8px] text-emerald-100 uppercase tracking-wide">Status Data</p>
-                    <p className="text-[10px] font-bold text-white leading-none">Live Monitoring</p>
-                </div>
-                <div className="relative w-2 h-2">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </div>
-            </div>
+
       </HeroSection>
 
       {/* 2. KPI CARDS - 3 Columns for 6 items */}

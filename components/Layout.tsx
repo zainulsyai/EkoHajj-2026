@@ -31,7 +31,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPage, onNavigat
         isOpen={sidebarOpen}
       />
 
-      <div className={`relative z-10 transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${sidebarOpen ? 'ml-72' : 'ml-24'} min-h-screen flex flex-col`}>
+      <div className={`relative z-10 transition-all duration-500 ease-in-out ${sidebarOpen ? 'ml-72' : 'ml-24'} min-h-screen flex flex-col will-change-[margin-left]`}>
         
         {/* Frosted Header */}
         <header className="h-20 bg-white/70 backdrop-blur-md border-b border-white/40 px-8 flex items-center justify-between sticky top-0 z-20 shadow-sm transition-all">

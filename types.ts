@@ -116,3 +116,10 @@ export enum Page {
   VISUALIZATION = 'VISUALIZATION',
   SETTINGS = 'SETTINGS'
 }
+
+export enum Status {
+  ALL = 'ALL',
+  DONE = 'DONE',
+  ON_PROGRESS = 'ON_PROGRESS',
+  FAILED = 'FAILED',
+}

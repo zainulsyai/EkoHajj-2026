@@ -1,12 +1,14 @@
 
 import React, { useState, useMemo } from 'react';
-import { Page } from '../types';
+import { Page, Status } from '../types';
 import { ChefHat, UtensilsCrossed, Store, Truck, Signal, ArrowRight, Activity, CheckCircle2, Clock, History, Search, X, ChevronRight, Calendar, ShoppingCart } from 'lucide-react';
 import { useData } from '../contexts/DataContext';
 import { HeroSection } from '../components/HeroSection';
 
 interface DataEntryPortalProps {
     onNavigate: (page: Page) => void;
+    statusFilter: Status;
+    onStatusFilterChange: (status: Status) => void;
 }
 
 const portalItems = [
@@ -18,7 +20,7 @@ const portalItems = [
     { id: 'telecom', title: "Telekomunikasi", subtitle: "Provider Jemaah", description: "Survei penggunaan RoaMax dan provider.", icon: Signal, targetPage: Page.FORM_TELECOM, status: 'pending', progress: 0, lastUpdate: '-', color: '#7C3AED' }
 ];
 
-export const DataEntryPortal: React.FC<DataEntryPortalProps> = ({ onNavigate }) => {
+export const DataEntryPortal: React.FC<DataEntryPortalProps> = ({ onNavigate, statusFilter, onStatusFilterChange }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const { bumbuMakkah, bumbuMadinah, rteData, tenantData, expeditionData, telecomData, riceData } = useData();
     const currentDate = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -81,6 +83,8 @@ export const DataEntryPortal: React.FC<DataEntryPortalProps> = ({ onNavigate }) 
                 title={<span>Pusat Input Data <span className="text-[#D4AF37]">Monitoring</span></span>}
                 subtitle="Kelola input dan validasi data lapangan untuk seluruh sektor ekosistem haji secara real-time."
                 currentDate={currentDate}
+                statusFilter={statusFilter}
+                onStatusFilterChange={onStatusFilterChange}
             >
                 {/* Search Bar - Height matched to Badge */}
                 <div className="relative group/search w-full md:w-64">
@@ -93,18 +97,6 @@ export const DataEntryPortal: React.FC<DataEntryPortalProps> = ({ onNavigate }) 
                             placeholder="Cari data (mis: Bumbu Rendang)..." 
                             className="w-full bg-transparent border-none py-2 px-3 text-white placeholder-emerald-200/50 text-xs font-bold focus:ring-0 tracking-wide" 
                         />
-                    </div>
-                </div>
-
-                {/* Status Badge - EXACT MATCH WITH DASHBOARD */}
-                <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 h-full min-h-[38px]">
-                    <div className="text-right">
-                        <p className="text-[8px] text-emerald-100 uppercase tracking-wide">Status Data</p>
-                        <p className="text-[10px] font-bold text-white leading-none">Live Monitoring</p>
-                    </div>
-                    <div className="relative w-2 h-2">
-                        <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </div>
                 </div>
             </HeroSection>
