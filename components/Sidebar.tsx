@@ -93,7 +93,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLog
       <div className="p-4 border-t border-white/5 bg-[#042f24] relative z-10">
         <button
             onClick={onLogout}
-            className={`w-full flex items-center gap-3.5 p-3.5 rounded-xl text-red-300/80 hover:bg-red-500/10 hover:text-red-200 transition-all duration-300 group border border-transparent hover:border-red-500/20 overflow-hidden whitespace-nowrap ${!isOpen && 'justify-center'}`}
+            className={`w-full flex items-center ${isOpen ? 'gap-3.5' : ''} p-3.5 rounded-xl text-red-300/80 hover:bg-red-500/10 hover:text-red-200 transition-all duration-300 group border border-transparent hover:border-red-500/20 overflow-hidden whitespace-nowrap ${!isOpen && 'justify-center'}`}
         >
             <div className="relative flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
                 <LogOut size={20} strokeWidth={2} />
@@ -110,7 +110,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onLog
 const MenuItem = ({ icon: Icon, label, isActive, onClick, isOpen }: any) => (
     <button
         onClick={onClick}
-        className={`w-full flex items-center gap-3.5 p-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden group whitespace-nowrap
+        className={`w-full flex items-center ${isOpen ? 'gap-3.5' : ''} p-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden group whitespace-nowrap
             ${isActive 
                 ? 'bg-gradient-to-r from-[#ffffff]/10 to-transparent text-white border border-white/10 shadow-lg' 
                 : 'text-gray-400 hover:bg-white/5 hover:text-white border border-transparent hover:shadow-md'

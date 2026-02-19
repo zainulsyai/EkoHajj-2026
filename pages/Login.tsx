@@ -130,13 +130,12 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                         ) : (
                              <>
                                 <span>Masuk</span>
-                                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                              </>
                         )}
                     </button>
 
                     <div className="mt-6 text-center">
-                        <p className="text-xs text-gray-500 font-medium">
+                        <p className="text-sm text-gray-600 font-medium tracking-wide">
                             Belum punya akun?{' '}
                             <a href="#" className="text-[#064E3B] font-bold hover:text-[#053d2e] hover:underline transition-all">
                                 Daftar Akun
