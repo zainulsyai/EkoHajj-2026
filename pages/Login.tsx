@@ -134,6 +134,15 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                              </>
                         )}
                     </button>
+
+                    <div className="mt-6 text-center">
+                        <p className="text-xs text-gray-500 font-medium">
+                            Belum punya akun?{' '}
+                            <a href="#" className="text-[#064E3B] font-bold hover:text-[#053d2e] hover:underline transition-all">
+                                Daftar Akun
+                            </a>
+                        </p>
+                    </div>
                 </form>
             </div>
 
