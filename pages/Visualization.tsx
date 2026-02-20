@@ -1,7 +1,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { GlassCard } from '../components/GlassCard';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell, Legend, AreaChart, Area, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ReferenceLine } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell, Legend, AreaChart, Area, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ReferenceLine, Sector } from 'recharts';
 import { useData } from '../contexts/DataContext';
 import { PieChart as PieIcon, TrendingUp, Info, BarChart3, MapPin, Activity, Radio, Calendar, Filter, ChevronDown, Check, ShoppingCart } from 'lucide-react';
 import { ChartSkeleton, PieSkeleton } from '../components/Skeletons';
@@ -14,6 +14,48 @@ export const Visualization: React.FC = () => {
     // Filter State: Time based
     const [timeFilter, setTimeFilter] = useState<'all' | 'today' | 'week' | 'month'>('all');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const onPieEnter = (_: any, index: number) => {
+        setActiveIndex(index);
+    };
+
+    const renderActiveShape = (props: any) => {
+        const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+
+        return (
+            <g>
+                <text x={cx} y={cy - 20} dy={8} textAnchor="middle" fill="#6B7280" className="text-[10px] font-medium uppercase tracking-wider">
+                    {payload.name.length > 15 ? `${payload.name.substring(0, 15)}...` : payload.name}
+                </text>
+                <text x={cx} y={cy + 5} dy={8} textAnchor="middle" fill={fill} className="text-3xl font-bold font-playfair">
+                    {`${(percent * 100).toFixed(0)}%`}
+                </text>
+                <text x={cx} y={cy + 25} dy={8} textAnchor="middle" fill="#9CA3AF" className="text-[10px] font-medium">
+                    {`${Math.floor(value).toLocaleString()} User`}
+                </text>
+                <Sector
+                    cx={cx}
+                    cy={cy}
+                    innerRadius={innerRadius}
+                    outerRadius={outerRadius + 8}
+                    startAngle={startAngle}
+                    endAngle={endAngle}
+                    fill={fill}
+                />
+                <Sector
+                    cx={cx}
+                    cy={cy}
+                    startAngle={startAngle}
+                    endAngle={endAngle}
+                    innerRadius={outerRadius + 8}
+                    outerRadius={outerRadius + 12}
+                    fill={fill}
+                />
+            </g>
+        );
+    };
 
     // Helper to simulate data scaling
     const getMultiplier = () => {
@@ -93,21 +135,35 @@ export const Visualization: React.FC = () => {
              const val = (parseFloat(t.rentCost) || 0) * multiplier;
              categories[cat] = (categories[cat] || 0) + val;
          });
-         return Object.keys(categories).map(key => ({
-             subject: key,
-             revenue: categories[key],
-             fullMark: Math.max(...Object.values(categories)) * 1.2
-         }));
+         return Object.keys(categories).map(key => {
+             const revenue = categories[key];
+             // Mock target as slightly higher or lower for visual interest
+             const target = revenue * (0.9 + Math.random() * 0.3); 
+             return {
+                 subject: key,
+                 revenue: revenue,
+                 target: target,
+                 fullMark: Math.max(...Object.values(categories)) * 1.2
+             };
+         });
     }, [tenantData, multiplier]);
 
     // 5. Rice Price Comparison (New)
     const dataRicePrice = useMemo(() => {
-        return riceData.filter(r => r.isUsed && r.companyName).map(r => ({
-            name: r.companyName,
-            price: parseFloat(r.price) || 0,
-            origin: parseFloat(r.productPrice) || 0
-        }));
+        return riceData
+            .filter(r => r.isUsed && r.companyName)
+            .map(r => ({
+                name: r.companyName,
+                price: parseFloat(r.price) || 0,
+                origin: parseFloat(r.productPrice) || 0
+            }))
+            .sort((a, b) => b.price - a.price); // Sort by price descending
     }, [riceData]);
+
+    const avgRicePrice = useMemo(() => {
+        if (dataRicePrice.length === 0) return 0;
+        return dataRicePrice.reduce((acc, curr) => acc + curr.price, 0) / dataRicePrice.length;
+    }, [dataRicePrice]);
 
     // --- CUSTOM COMPONENTS ---
 
@@ -212,7 +268,7 @@ export const Visualization: React.FC = () => {
                         className="!bg-white/70 h-full min-h-[450px]"
                         action={<div className="p-2 bg-emerald-50 rounded-lg text-emerald-700"><BarChart3 size={18}/></div>}
                     >
-                        <div className="h-[350px] md:h-[400px] mt-2 w-full">
+                        <div className="h-[350px] md:h-[400px] mt-4 w-full">
                              {isLoading ? <ChartSkeleton /> : (
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={dataPriceComparison} margin={{ top: 20, right: 10, left: 0, bottom: 20 }} barGap={2}>
@@ -249,35 +305,59 @@ export const Visualization: React.FC = () => {
                         className="!bg-white/70 h-full min-h-[450px]"
                         action={<div className="p-2 bg-blue-50 rounded-lg text-blue-700"><Radio size={18}/></div>}
                     >
-                        <div className="h-[350px] md:h-[400px] mt-2 relative flex items-center justify-center">
-                            {isLoading ? <PieSkeleton /> : (
-                                <>
+                        <div className="flex flex-col h-[380px]">
+                            <div className="h-[200px] w-full relative -mt-2">
+                                {isLoading ? <PieSkeleton /> : (
                                     <ResponsiveContainer width="100%" height="100%">
                                         <PieChart>
                                             <Pie 
+                                                activeIndex={activeIndex}
+                                                activeShape={renderActiveShape}
                                                 data={dataTelcoShare} 
                                                 cx="50%" 
                                                 cy="50%" 
-                                                innerRadius={70} 
-                                                outerRadius={100} 
-                                                paddingAngle={5} 
+                                                innerRadius={60} 
+                                                outerRadius={80} 
+                                                paddingAngle={4} 
                                                 dataKey="value"
-                                                cornerRadius={8}
+                                                cornerRadius={4}
                                                 stroke="none"
+                                                onMouseEnter={onPieEnter}
                                             >
                                                 {dataTelcoShare.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={entry.color} />
+                                                    <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
                                                 ))}
                                             </Pie>
-                                            <Tooltip content={<CustomTooltip />} />
-                                            <Legend layout="horizontal" verticalAlign="bottom" align="center" iconType="circle" wrapperStyle={{fontSize: '11px', fontWeight: 600, paddingTop: '20px'}} />
                                         </PieChart>
                                     </ResponsiveContainer>
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-12">
-                                        <span className="text-3xl md:text-4xl font-bold text-[#064E3B] font-playfair">{dataTelcoShare.length}</span>
-                                        <span className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Provider</span>
+                                )}
+                            </div>
+                            
+                            {!isLoading && dataTelcoShare.length > 0 && (
+                                <div className="mt-auto px-1 pb-2">
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {dataTelcoShare.map((entry, index) => (
+                                            <div 
+                                                key={index} 
+                                                className={`flex flex-col p-2 rounded-lg transition-all cursor-pointer border ${activeIndex === index ? 'bg-blue-50 border-blue-100 shadow-sm' : 'bg-gray-50/50 hover:bg-gray-50 border-transparent'}`}
+                                                onMouseEnter={() => setActiveIndex(index)}
+                                            >
+                                                <div className="flex items-center gap-1.5 mb-1">
+                                                    <div className="w-2 h-2 rounded-full flex-shrink-0 shadow-sm" style={{ backgroundColor: entry.color }}></div>
+                                                    <span className={`text-[10px] font-bold truncate leading-tight ${activeIndex === index ? 'text-blue-900' : 'text-gray-700'}`}>
+                                                        {entry.name}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-[9px] text-gray-400 font-medium">{Math.floor(entry.value).toLocaleString()}</span>
+                                                    <span className={`text-[10px] font-bold ${activeIndex === index ? 'text-blue-700' : 'text-gray-900'}`}>
+                                                        {((entry.value / dataTelcoShare.reduce((a, b) => a + b.value, 0)) * 100).toFixed(1)}%
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                </>
+                                </div>
                             )}
                         </div>
                     </GlassCard>
@@ -294,17 +374,30 @@ export const Visualization: React.FC = () => {
                     className="!bg-white/70 min-h-[450px]"
                     action={<div className="p-2 bg-green-50 rounded-lg text-green-700"><ShoppingCart size={18}/></div>}
                 >
-                    <div className="h-[350px] md:h-[400px] mt-2">
+                    <div className="h-[350px] md:h-[400px] mt-6">
                         {isLoading ? <ChartSkeleton /> : (
                             <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={dataRicePrice} margin={{ top: 20, right: 30, left: 10, bottom: 5 }} layout="vertical">
+                                <BarChart data={dataRicePrice} margin={{ top: 20, right: 30, left: 10, bottom: 5 }} layout="vertical" barCategoryGap="20%">
+                                    <defs>
+                                        <linearGradient id="gradRicePrice" x1="0" y1="0" x2="1" y2="0">
+                                            <stop offset="0%" stopColor={COLORS.primary} stopOpacity={0.8}/>
+                                            <stop offset="100%" stopColor={COLORS.primaryLight} stopOpacity={1}/>
+                                        </linearGradient>
+                                        <linearGradient id="gradRiceOrigin" x1="0" y1="0" x2="1" y2="0">
+                                            <stop offset="0%" stopColor={COLORS.neutral} stopOpacity={0.4}/>
+                                            <stop offset="100%" stopColor={COLORS.neutral} stopOpacity={0.7}/>
+                                        </linearGradient>
+                                    </defs>
                                     <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#E5E7EB" />
                                     <XAxis type="number" fontSize={11} stroke="#6B7280" tickLine={false} axisLine={false} />
-                                    <YAxis dataKey="name" type="category" width={100} fontSize={11} stroke="#6B7280" tickLine={false} axisLine={false} />
+                                    <YAxis dataKey="name" type="category" width={120} fontSize={11} stroke="#6B7280" tickLine={false} axisLine={false} fontWeight={500} />
                                     <Tooltip cursor={{fill: '#F3F4F6'}} content={<CustomTooltip unit="SAR" />} />
-                                    <Bar dataKey="price" name="Harga Jual" fill={COLORS.primary} radius={[0, 4, 4, 0]} barSize={12} />
-                                    <Bar dataKey="origin" name="Harga Asal" fill={COLORS.neutral} radius={[0, 4, 4, 0]} barSize={12} />
                                     <Legend iconType="circle" wrapperStyle={{fontSize: '12px', paddingTop: '10px'}} />
+                                    
+                                    <Bar dataKey="price" name="Harga Jual" fill="url(#gradRicePrice)" radius={[0, 4, 4, 0]} barSize={16} />
+                                    <Bar dataKey="origin" name="Harga Asal" fill="url(#gradRiceOrigin)" radius={[0, 4, 4, 0]} barSize={16} />
+                                    
+                                    <ReferenceLine x={avgRicePrice} stroke="#EF4444" strokeDasharray="3 3" label={{ position: 'top', value: 'Rata-rata', fill: '#EF4444', fontSize: 10 }} />
                                 </BarChart>
                             </ResponsiveContainer>
                         )}
@@ -318,22 +411,41 @@ export const Visualization: React.FC = () => {
                     className="!bg-white/70 min-h-[450px]"
                     action={<div className="p-2 bg-purple-50 rounded-lg text-purple-700"><TrendingUp size={18}/></div>}
                 >
-                    <div className="h-[350px] md:h-[400px] mt-2">
+                    <div className="h-[350px] md:h-[400px] mt-6">
                         {isLoading ? <PieSkeleton /> : (
                             <ResponsiveContainer width="100%" height="100%">
                                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={dataHotelRevenue}>
+                                    <defs>
+                                        <radialGradient id="gradRadarRevenue" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                            <stop offset="0%" stopColor={COLORS.secondary} stopOpacity={0.1}/>
+                                            <stop offset="100%" stopColor={COLORS.secondary} stopOpacity={0.6}/>
+                                        </radialGradient>
+                                    </defs>
                                     <PolarGrid stroke="#E5E7EB" strokeDasharray="4 4" />
                                     <PolarAngleAxis dataKey="subject" fontSize={11} tick={{ fill: '#4B5563', fontWeight: 'bold' }} />
                                     <PolarRadiusAxis angle={30} stroke="none" />
+                                    
+                                    <Radar 
+                                        name="Target (SAR)" 
+                                        dataKey="target" 
+                                        stroke="#9CA3AF" 
+                                        strokeWidth={2} 
+                                        strokeDasharray="4 4"
+                                        fill="none" 
+                                        fillOpacity={0} 
+                                    />
+                                    
                                     <Radar 
                                         name="Revenue (SAR)" 
                                         dataKey="revenue" 
                                         stroke={COLORS.secondary} 
                                         strokeWidth={3} 
-                                        fill={COLORS.secondary} 
-                                        fillOpacity={0.3} 
+                                        fill="url(#gradRadarRevenue)" 
+                                        fillOpacity={0.6} 
                                     />
+                                    
                                     <Tooltip content={<CustomTooltip unit="SAR" />} />
+                                    <Legend iconType="circle" wrapperStyle={{fontSize: '12px', paddingTop: '10px'}} />
                                 </RadarChart>
                             </ResponsiveContainer>
                         )}
