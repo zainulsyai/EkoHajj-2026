@@ -12,12 +12,12 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ title, subtitle, currentDate, children, className = '' }) => {
   return (
-    <div className={`bg-[#064E3B] rounded-[2rem] md:rounded-[2.5rem] px-6 py-6 md:px-12 md:py-8 text-white relative shadow-2xl shadow-[#064E3B]/20 min-h-[180px] flex flex-col justify-center border border-white/5 ${className}`}>
-        {/* Ambient Background Effects - Wrapped in a container to clip overflow without clipping dropdowns */}
-        <div className="absolute inset-0 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden pointer-events-none">
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#10B981] to-[#064E3B] rounded-full blur-[120px] opacity-40 translate-x-1/3 -translate-y-1/3"></div>
-            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#D4AF37] rounded-full blur-[100px] opacity-20 -translate-x-1/3 translate-y-1/3"></div>
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] mix-blend-overlay"></div>
+    <div className={`bg-[#064E3B] rounded-[2rem] md:rounded-[2.5rem] px-6 py-6 md:px-12 md:py-8 text-white relative shadow-2xl shadow-[#064E3B]/30 min-h-[180px] flex flex-col justify-center border border-white/10 overflow-hidden ${className}`}>
+        {/* Ambient Background Effects */}
+        <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-b from-[#10B981] to-[#064E3B] rounded-full blur-[120px] opacity-30 translate-x-1/4 -translate-y-1/4 mix-blend-screen"></div>
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#D4AF37] rounded-full blur-[100px] opacity-15 -translate-x-1/4 translate-y-1/4 mix-blend-screen"></div>
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] mix-blend-overlay"></div>
         </div>
         
         <div className="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 lg:gap-8">

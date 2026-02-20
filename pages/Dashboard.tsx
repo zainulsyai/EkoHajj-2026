@@ -1,7 +1,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { GlassCard } from '../components/GlassCard';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, Cell, PieChart, Pie, Legend } from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, Cell, PieChart, Pie, Legend, LineChart, Line, ComposedChart, ReferenceLine, Sector } from 'recharts';
 import { TrendingUp, Activity, Package, Truck, Signal, Calendar, MapPin, ChefHat, UtensilsCrossed, Store, ArrowRight, Wallet, BarChart3, PieChart as PieIcon, History, Filter, ChevronDown, Clock, Check, ShoppingCart, Smartphone } from 'lucide-react';
 import { useData } from '../contexts/DataContext';
 import { ChartSkeleton, ListSkeleton, PieSkeleton, StatCardSkeleton } from '../components/Skeletons';
@@ -68,6 +68,42 @@ interface DashboardProps {
   onStatusFilterChange: (status: Status) => void;
 }
 
+const renderActiveShape = (props: any) => {
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+
+  return (
+    <g>
+      <text x={cx} y={cy - 20} dy={8} textAnchor="middle" fill="#6B7280" className="text-[10px] font-medium uppercase tracking-wider">
+        {payload.name.length > 15 ? `${payload.name.substring(0, 15)}...` : payload.name}
+      </text>
+      <text x={cx} y={cy + 5} dy={8} textAnchor="middle" fill={fill} className="text-3xl font-bold font-playfair">
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+      <text x={cx} y={cy + 25} dy={8} textAnchor="middle" fill="#9CA3AF" className="text-[10px] font-medium">
+        {`${value.toLocaleString()} Porsi`}
+      </text>
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius + 8}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={fill}
+      />
+      <Sector
+        cx={cx}
+        cy={cy}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        innerRadius={outerRadius + 8}
+        outerRadius={outerRadius + 12}
+        fill={fill}
+      />
+    </g>
+  );
+};
+
 export const Dashboard: React.FC<DashboardProps> = ({ statusFilter, onStatusFilterChange }) => {
   const currentDate = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const { bumbuMakkah, bumbuMadinah, rteData, expeditionData, tenantData, riceData, telecomData, isLoading } = useData();
@@ -75,6 +111,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ statusFilter, onStatusFilt
   // Filter State: 'all' | 'today' | 'week' | 'month'
   const [timeFilter, setTimeFilter] = useState<'all' | 'today' | 'week' | 'month'>('all');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const onPieEnter = (_: any, index: number) => {
+    setActiveIndex(index);
+  };
 
   // Helper to simulate data scaling based on time filter
   const getMultiplier = () => {
@@ -192,6 +233,48 @@ export const Dashboard: React.FC<DashboardProps> = ({ statusFilter, onStatusFilt
             { label: 'Mei', makkah: 220, madinah: 180 },
             { label: 'Jun', makkah: 300, madinah: 250 },
             { label: 'Jul', makkah: 250, madinah: 200 },
+          ];
+      }
+  }, [timeFilter]);
+
+  // IPEHU Data
+  const dataIPEHU = useMemo(() => {
+      const target = 85;
+      if (timeFilter === 'today') {
+          return [
+              { label: '08:00', value: 65, target },
+              { label: '10:00', value: 68, target },
+              { label: '12:00', value: 75, target },
+              { label: '14:00', value: 72, target },
+              { label: '16:00', value: 80, target },
+              { label: '18:00', value: 85, target },
+          ];
+      } else if (timeFilter === 'week') {
+          return [
+            { label: 'Senin', value: 70, target },
+            { label: 'Selasa', value: 72, target },
+            { label: 'Rabu', value: 75, target },
+            { label: 'Kamis', value: 78, target },
+            { label: 'Jumat', value: 82, target },
+            { label: 'Sabtu', value: 85, target },
+            { label: 'Minggu', value: 88, target },
+          ];
+      } else if (timeFilter === 'month') {
+          return [
+              { label: 'Minggu 1', value: 75, target },
+              { label: 'Minggu 2', value: 78, target },
+              { label: 'Minggu 3', value: 82, target },
+              { label: 'Minggu 4', value: 85, target },
+          ];
+      } else {
+          return [
+            { label: 'Jan', value: 60, target },
+            { label: 'Feb', value: 65, target },
+            { label: 'Mar', value: 70, target },
+            { label: 'Apr', value: 75, target },
+            { label: 'Mei', value: 80, target },
+            { label: 'Jun', value: 85, target },
+            { label: 'Jul', value: 82, target },
           ];
       }
   }, [timeFilter]);
@@ -364,174 +447,245 @@ export const Dashboard: React.FC<DashboardProps> = ({ statusFilter, onStatusFilt
         )}
       </div>
 
-      {/* 3. CHARTS ROW 1 */}
+      {/* 3. MAIN CONTENT GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* ROW 1: IPEHU (FULL WIDTH) */}
+          <div className="lg:col-span-3">
+              <GlassCard 
+                  title="Indeks Pemberdayaan Ekonomi Haji (IPEHU)" 
+                  subtitle="Perkembangan IPEHU Berdasarkan Produk & Jasa"
+                  className="!bg-white/70 h-full min-h-[450px]"
+                  action={<div className="p-2 bg-indigo-50 rounded-lg text-indigo-700"><Activity size={16}/></div>}
+              >
+                  <div className="mb-4 p-4 bg-indigo-50/50 rounded-xl border border-indigo-100">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <div className="space-y-1">
+                              <p className="text-xs font-semibold text-indigo-900">Rumus IPEHU:</p>
+                              <code className="text-[10px] md:text-xs font-mono bg-white px-2 py-1 rounded border border-indigo-200 text-indigo-700 block w-fit">
+                                  IPEHU = (Σ (Nilai Transaksi Produk Indonesia / Total Transaksi)) × 100
+                              </code>
+                          </div>
+                          <div className="md:max-w-lg">
+                              <p className="text-[10px] md:text-xs text-indigo-800/80 leading-relaxed">
+                                  <span className="font-semibold text-indigo-900">Penjelasan:</span> Indeks ini mengukur kontribusi produk & jasa Indonesia dalam ekosistem haji. Semakin tinggi nilai, semakin besar pemberdayaan ekonomi nasional.
+                              </p>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div className="h-[300px] w-full mt-2">
+                      {isLoading ? <ChartSkeleton /> : (
+                          <ResponsiveContainer width="100%" height="100%">
+                              <ComposedChart data={dataIPEHU} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                  <defs>
+                                      <linearGradient id="gradIPEHU" x1="0" y1="0" x2="0" y2="1">
+                                          <stop offset="5%" stopColor="#6366F1" stopOpacity={0.4}/>
+                                          <stop offset="95%" stopColor="#6366F1" stopOpacity={0}/>
+                                      </linearGradient>
+                                  </defs>
+                                  <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#E5E7EB" />
+                                  <XAxis dataKey="label" axisLine={false} tickLine={false} fontSize={11} stroke="#6B7280" fontWeight={500} dy={10} />
+                                  <YAxis axisLine={false} tickLine={false} fontSize={11} stroke="#6B7280" domain={[0, 100]} />
+                                  <Tooltip content={<CustomTooltip unit="Poin" />} cursor={{ stroke: '#6366F1', strokeWidth: 1, strokeDasharray: '4 4' }} />
+                                  
+                                  <Area 
+                                      type="monotone" 
+                                      dataKey="value" 
+                                      name="Nilai IPEHU"
+                                      stroke="#6366F1" 
+                                      fill="url(#gradIPEHU)"
+                                      strokeWidth={3}
+                                      activeDot={{ r: 6, strokeWidth: 0, fill: '#6366F1' }}
+                                  />
+                                  
+                                  <Line 
+                                      type="monotone" 
+                                      dataKey="target" 
+                                      name="Target (85%)" 
+                                      stroke="#10B981" 
+                                      strokeWidth={2} 
+                                      strokeDasharray="5 5" 
+                                      dot={false} 
+                                      activeDot={false}
+                                  />
+                                  
+                                  <ReferenceLine y={60} label={{ position: 'insideBottomRight', value: 'Min Threshold', fill: 'red', fontSize: 10 }} stroke="red" strokeDasharray="3 3" opacity={0.5} />
+                                  
+                                  <Legend iconType="circle" wrapperStyle={{paddingTop: '10px', fontSize: '12px'}} />
+                              </ComposedChart>
+                          </ResponsiveContainer>
+                      )}
+                  </div>
+              </GlassCard>
+          </div>
+
+          {/* ROW 2: TREND & MARKET SHARE */}
           <div className="lg:col-span-2">
-            <GlassCard 
-                title="Tren Konsumsi Bumbu" 
-                subtitle={`Analisis Wilayah Makkah & Madinah (${filterLabel[timeFilter]})`}
-                className="!bg-white/70 h-full min-h-[400px]"
-                action={<div className="p-2 bg-emerald-50 rounded-lg text-emerald-700"><TrendingUp size={18}/></div>}
-            >
-                <div className="h-[250px] md:h-[300px] w-full mt-4">
-                    {isLoading ? <ChartSkeleton /> : (
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={dataBumbuTrend} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                                <defs>
-                                    <linearGradient id="gradMakkahHome" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor={COLORS.primary} stopOpacity={0.6}/>
-                                        <stop offset="95%" stopColor={COLORS.primary} stopOpacity={0}/>
-                                    </linearGradient>
-                                    <linearGradient id="gradMadinahHome" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor={COLORS.accent} stopOpacity={0.6}/>
-                                        <stop offset="95%" stopColor={COLORS.accent} stopOpacity={0}/>
-                                    </linearGradient>
-                                </defs>
-                                <XAxis dataKey="label" axisLine={false} tickLine={false} fontSize={11} stroke="#6B7280" fontWeight={500} dy={10} />
-                                <YAxis axisLine={false} tickLine={false} fontSize={11} stroke="#6B7280" />
-                                <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#E5E7EB" />
-                                <Tooltip content={<CustomTooltip unit="Ton" />} cursor={{ stroke: COLORS.primary, strokeWidth: 1, strokeDasharray: '4 4' }} />
-                                
-                                <Area 
-                                    type="monotone" 
-                                    dataKey="makkah" 
-                                    name="Makkah"
-                                    stroke={COLORS.primary} 
-                                    fillOpacity={1} 
-                                    fill="url(#gradMakkahHome)" 
-                                    strokeWidth={3} 
-                                    activeDot={{ r: 6, strokeWidth: 0, fill: COLORS.primary }}
-                                />
-                                
-                                <Area 
-                                    type="monotone" 
-                                    dataKey="madinah" 
-                                    name="Madinah"
-                                    stroke={COLORS.accent} 
-                                    fillOpacity={1} 
-                                    fill="url(#gradMadinahHome)" 
-                                    strokeWidth={3} 
-                                    activeDot={{ r: 6, strokeWidth: 0, fill: COLORS.accent }}
-                                />
-                                
-                                <Legend iconType="circle" wrapperStyle={{paddingTop: '20px'}} />
-                            </AreaChart>
-                        </ResponsiveContainer>
-                    )}
-                </div>
-            </GlassCard>
+              <GlassCard 
+                  title="Tren Konsumsi Bumbu" 
+                  subtitle={`Analisis Wilayah Makkah & Madinah (${filterLabel[timeFilter]})`}
+                  className="!bg-white/70 h-full min-h-[380px]"
+                  action={<div className="p-2 bg-emerald-50 rounded-lg text-emerald-700"><TrendingUp size={16}/></div>}
+              >
+                  <div className="h-[280px] w-full mt-2">
+                      {isLoading ? <ChartSkeleton /> : (
+                          <ResponsiveContainer width="100%" height="100%">
+                              <AreaChart data={dataBumbuTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                  <defs>
+                                      <linearGradient id="gradMakkahHome" x1="0" y1="0" x2="0" y2="1">
+                                          <stop offset="5%" stopColor={COLORS.primary} stopOpacity={0.6}/>
+                                          <stop offset="95%" stopColor={COLORS.primary} stopOpacity={0}/>
+                                      </linearGradient>
+                                      <linearGradient id="gradMadinahHome" x1="0" y1="0" x2="0" y2="1">
+                                          <stop offset="5%" stopColor={COLORS.accent} stopOpacity={0.6}/>
+                                          <stop offset="95%" stopColor={COLORS.accent} stopOpacity={0}/>
+                                      </linearGradient>
+                                  </defs>
+                                  <XAxis dataKey="label" axisLine={false} tickLine={false} fontSize={10} stroke="#6B7280" fontWeight={500} dy={10} />
+                                  <YAxis axisLine={false} tickLine={false} fontSize={10} stroke="#6B7280" />
+                                  <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#E5E7EB" />
+                                  <Tooltip content={<CustomTooltip unit="Ton" />} cursor={{ stroke: COLORS.primary, strokeWidth: 1, strokeDasharray: '4 4' }} />
+                                  
+                                  <Area 
+                                      type="monotone" 
+                                      dataKey="makkah" 
+                                      name="Makkah"
+                                      stroke={COLORS.primary} 
+                                      fillOpacity={1} 
+                                      fill="url(#gradMakkahHome)" 
+                                      strokeWidth={2} 
+                                      activeDot={{ r: 4, strokeWidth: 0, fill: COLORS.primary }}
+                                  />
+                                  
+                                  <Area 
+                                      type="monotone" 
+                                      dataKey="madinah" 
+                                      name="Madinah"
+                                      stroke={COLORS.accent} 
+                                      fillOpacity={1} 
+                                      fill="url(#gradMadinahHome)" 
+                                      strokeWidth={2} 
+                                      activeDot={{ r: 4, strokeWidth: 0, fill: COLORS.accent }}
+                                  />
+                                  
+                                  <Legend iconType="circle" wrapperStyle={{paddingTop: '10px', fontSize: '11px'}} />
+                              </AreaChart>
+                          </ResponsiveContainer>
+                      )}
+                  </div>
+              </GlassCard>
           </div>
 
           <div className="lg:col-span-1">
-             <GlassCard 
-                title="Market Share RTE" 
-                subtitle={`Distribusi ${filterLabel[timeFilter]}`}
-                className="!bg-white/70 h-full min-h-[400px]"
-                action={<div className="p-2 bg-amber-50 rounded-lg text-amber-700"><PieIcon size={18}/></div>}
-            >
-                <div className="h-[250px] md:h-[300px] w-full relative">
-                    {isLoading ? <PieSkeleton /> : (
-                        rteChartData.length > 0 ? (
-                            <>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <PieChart>
-                                        <Pie 
-                                            data={rteChartData} 
-                                            cx="50%" 
-                                            cy="50%" 
-                                            innerRadius={70} 
-                                            outerRadius={90} 
-                                            paddingAngle={5} 
-                                            dataKey="value"
-                                            cornerRadius={6}
-                                            stroke="none"
-                                        >
-                                            {rteChartData.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip content={<CustomTooltip unit="Porsi" />} />
-                                        <Legend verticalAlign="bottom" height={36} iconType="circle"/>
-                                    </PieChart>
-                                </ResponsiveContainer>
-                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
-                                    <span className="text-2xl font-bold text-[#064E3B] font-playfair">{totalRTE.toLocaleString()}</span>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Total Porsi</span>
-                                </div>
-                            </>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center h-full text-gray-400">
-                                <UtensilsCrossed size={32} className="mb-2 opacity-50" />
-                                <p className="text-xs">Tidak ada data untuk filter ini</p>
-                            </div>
-                        )
-                    )}
-                </div>
-            </GlassCard>
+              <GlassCard 
+                  title="Market Share RTE" 
+                  subtitle={`Distribusi ${filterLabel[timeFilter]}`}
+                  className="!bg-white/70 h-full min-h-[380px]"
+                  action={<div className="p-2 bg-amber-50 rounded-lg text-amber-700"><PieIcon size={16}/></div>}
+              >
+                  <div className="h-[280px] w-full relative">
+                      {isLoading ? <PieSkeleton /> : (
+                          rteChartData.length > 0 ? (
+                              <ResponsiveContainer width="100%" height="100%">
+                                  <PieChart>
+                                      <Pie 
+                                          activeIndex={activeIndex}
+                                          activeShape={renderActiveShape}
+                                          data={rteChartData} 
+                                          cx="50%" 
+                                          cy="50%" 
+                                          innerRadius={60} 
+                                          outerRadius={80} 
+                                          paddingAngle={4} 
+                                          dataKey="value"
+                                          cornerRadius={4}
+                                          stroke="none"
+                                          onMouseEnter={onPieEnter}
+                                      >
+                                          {rteChartData.map((entry, index) => (
+                                              <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                                          ))}
+                                      </Pie>
+                                      <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{fontSize: '10px', paddingTop: '20px'}}/>
+                                  </PieChart>
+                              </ResponsiveContainer>
+                          ) : (
+                              <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                                  <UtensilsCrossed size={24} className="mb-2 opacity-50" />
+                                  <p className="text-[10px]">Tidak ada data</p>
+                              </div>
+                          )
+                      )}
+                  </div>
+              </GlassCard>
           </div>
-      </div>
 
-      {/* 4. ACTIVITY & ALERTS */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <GlassCard 
-            title="Aktivitas Input Data" 
-            subtitle="Real-time Activity Log" 
-            className="!bg-white/70 min-h-[300px]"
-            action={<div className="p-2 bg-blue-50 rounded-lg text-blue-700"><History size={18}/></div>}
-          >
-               <div className="space-y-4 mt-2 h-[240px] overflow-y-auto custom-scrollbar pr-2">
-                   {isLoading ? <ListSkeleton /> : (
-                        <>
-                           {activityLogs.map((log, idx) => (
-                               <div key={idx} className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-                                   <div className={`p-2.5 rounded-lg ${log.bg} ${log.color}`}>
-                                       <log.icon size={18} />
-                                   </div>
-                                   <div className="flex-1">
-                                       <p className="text-sm font-bold text-gray-700">{log.text}</p>
-                                       <div className="flex justify-between items-center mt-0.5">
-                                           <p className="text-[11px] text-gray-500 font-medium bg-gray-100 px-2 py-0.5 rounded-md">{log.detail}</p>
-                                           <p className="text-[10px] text-gray-400 font-medium flex items-center gap-1"><Calendar size={10}/> {log.time}</p>
+          {/* ROW 3: EXPEDITION & ACTIVITY */}
+          <div className="lg:col-span-2">
+              <GlassCard 
+                  title="Top Pengiriman" 
+                  subtitle={`Volume (Kg) - ${filterLabel[timeFilter]}`} 
+                  className="!bg-white/70 h-full min-h-[350px]"
+                  action={<div className="p-2 bg-orange-50 rounded-lg text-orange-700"><BarChart3 size={16}/></div>}
+              >
+                    <div className="h-[250px] mt-2">
+                         {isLoading ? <ChartSkeleton /> : (
+                             <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={expeditionChartData} layout="vertical" margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+                                     <defs>
+                                        <linearGradient id="gradBar" x1="0" y1="0" x2="1" y2="0">
+                                            <stop offset="0%" stopColor="#B45309" />
+                                            <stop offset="100%" stopColor="#D97706" />
+                                        </linearGradient>
+                                     </defs>
+                                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e5e7eb" />
+                                     <XAxis type="number" hide />
+                                     <YAxis dataKey="kloter" type="category" axisLine={false} tickLine={false} fontSize={10} fontWeight={600} stroke="#4B5563" width={70} />
+                                     <Tooltip cursor={{fill: 'transparent'}} content={<CustomTooltip unit="Kg" />} />
+                                     <Bar dataKey="berat" fill="url(#gradBar)" radius={[0, 4, 4, 0]} barSize={20}>
+                                        {expeditionChartData.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fillOpacity={0.9} />
+                                        ))}
+                                     </Bar>
+                                </BarChart>
+                             </ResponsiveContainer>
+                         )}
+                    </div>
+              </GlassCard>
+          </div>
+
+          <div className="lg:col-span-1">
+              <GlassCard 
+                title="Aktivitas Input" 
+                subtitle="Real-time Log" 
+                className="!bg-white/70 h-full min-h-[350px]"
+                action={<div className="p-2 bg-blue-50 rounded-lg text-blue-700"><History size={16}/></div>}
+              >
+                   <div className="space-y-3 mt-2 h-[250px] overflow-y-auto custom-scrollbar pr-1">
+                       {isLoading ? <ListSkeleton /> : (
+                            <>
+                               {activityLogs.map((log, idx) => (
+                                   <div key={idx} className="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100 group">
+                                       <div className={`p-2 rounded-lg ${log.bg} ${log.color} mt-0.5 group-hover:scale-110 transition-transform`}>
+                                           <log.icon size={14} />
+                                       </div>
+                                       <div className="flex-1 min-w-0">
+                                           <p className="text-xs font-bold text-gray-700 truncate">{log.text}</p>
+                                           <div className="flex flex-col gap-0.5 mt-0.5">
+                                               <p className="text-[10px] text-gray-500 font-medium bg-gray-100 px-1.5 py-0.5 rounded w-fit truncate max-w-full">{log.detail}</p>
+                                               <p className="text-[9px] text-gray-400 font-medium flex items-center gap-1"><Clock size={9}/> {log.time}</p>
+                                           </div>
                                        </div>
                                    </div>
-                               </div>
-                           ))}
-                           {activityLogs.length === 0 && <p className="text-center text-gray-400 text-sm py-4">Belum ada aktivitas baru.</p>}
-                        </>
-                   )}
-               </div>
-          </GlassCard>
+                               ))}
+                               {activityLogs.length === 0 && <p className="text-center text-gray-400 text-xs py-4">Belum ada aktivitas baru.</p>}
+                            </>
+                       )}
+                   </div>
+              </GlassCard>
+          </div>
 
-           <GlassCard 
-                title="Top Pengiriman Ekspedisi" 
-                subtitle={`Berdasarkan Volume (Kg) - ${filterLabel[timeFilter]}`} 
-                className="!bg-white/70 min-h-[300px]"
-                action={<div className="p-2 bg-orange-50 rounded-lg text-orange-700"><BarChart3 size={18}/></div>}
-           >
-                <div className="h-[240px] mt-2">
-                     {isLoading ? <ChartSkeleton /> : (
-                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={expeditionChartData} layout="vertical" margin={{ top: 5, right: 30, left: 10, bottom: 5 }}>
-                                 <defs>
-                                    <linearGradient id="gradBar" x1="0" y1="0" x2="1" y2="0">
-                                        <stop offset="0%" stopColor="#B45309" />
-                                        <stop offset="100%" stopColor="#D97706" />
-                                    </linearGradient>
-                                 </defs>
-                                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e5e7eb" />
-                                 <XAxis type="number" hide />
-                                 <YAxis dataKey="kloter" type="category" axisLine={false} tickLine={false} fontSize={11} fontWeight={600} stroke="#4B5563" width={90} />
-                                 <Tooltip cursor={{fill: 'transparent'}} content={<CustomTooltip unit="Kg" />} />
-                                 <Bar dataKey="berat" fill="url(#gradBar)" radius={[0, 6, 6, 0]} barSize={20}>
-                                    {expeditionChartData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fillOpacity={0.9} />
-                                    ))}
-                                 </Bar>
-                            </BarChart>
-                         </ResponsiveContainer>
-                     )}
-                </div>
-           </GlassCard>
       </div>
 
     </div>

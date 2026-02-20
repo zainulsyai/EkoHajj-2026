@@ -212,7 +212,7 @@ export const Visualization: React.FC = () => {
                         className="!bg-white/70 h-full min-h-[450px]"
                         action={<div className="p-2 bg-emerald-50 rounded-lg text-emerald-700"><BarChart3 size={18}/></div>}
                     >
-                        <div className="h-[350px] md:h-[400px] mt-4 w-full">
+                        <div className="h-[350px] md:h-[400px] mt-2 w-full">
                              {isLoading ? <ChartSkeleton /> : (
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={dataPriceComparison} margin={{ top: 20, right: 10, left: 0, bottom: 20 }} barGap={2}>
@@ -249,7 +249,7 @@ export const Visualization: React.FC = () => {
                         className="!bg-white/70 h-full min-h-[450px]"
                         action={<div className="p-2 bg-blue-50 rounded-lg text-blue-700"><Radio size={18}/></div>}
                     >
-                        <div className="h-[350px] md:h-[400px] mt-4 relative flex items-center justify-center">
+                        <div className="h-[350px] md:h-[400px] mt-2 relative flex items-center justify-center">
                             {isLoading ? <PieSkeleton /> : (
                                 <>
                                     <ResponsiveContainer width="100%" height="100%">
@@ -294,7 +294,7 @@ export const Visualization: React.FC = () => {
                     className="!bg-white/70 min-h-[450px]"
                     action={<div className="p-2 bg-green-50 rounded-lg text-green-700"><ShoppingCart size={18}/></div>}
                 >
-                    <div className="h-[350px] md:h-[400px] mt-6">
+                    <div className="h-[350px] md:h-[400px] mt-2">
                         {isLoading ? <ChartSkeleton /> : (
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={dataRicePrice} margin={{ top: 20, right: 30, left: 10, bottom: 5 }} layout="vertical">
@@ -318,7 +318,7 @@ export const Visualization: React.FC = () => {
                     className="!bg-white/70 min-h-[450px]"
                     action={<div className="p-2 bg-purple-50 rounded-lg text-purple-700"><TrendingUp size={18}/></div>}
                 >
-                    <div className="h-[350px] md:h-[400px] mt-6">
+                    <div className="h-[350px] md:h-[400px] mt-2">
                         {isLoading ? <PieSkeleton /> : (
                             <ResponsiveContainer width="100%" height="100%">
                                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={dataHotelRevenue}>
