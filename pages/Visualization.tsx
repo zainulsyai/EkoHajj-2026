@@ -209,13 +209,13 @@ export const Visualization: React.FC = () => {
                     <GlassCard 
                         title="Komparasi Harga Bumbu" 
                         subtitle={`Rata-rata Harga Pasar (SAR) - ${timeFilter === 'all' ? 'Periode 2026' : timeFilter}`} 
-                        className="!bg-white/70 h-full min-h-[400px]"
+                        className="!bg-white/70 h-full min-h-[450px]"
                         action={<div className="p-2 bg-emerald-50 rounded-lg text-emerald-700"><BarChart3 size={18}/></div>}
                     >
-                        <div className="h-[300px] md:h-[350px] mt-4 w-full">
+                        <div className="h-[350px] md:h-[400px] mt-4 w-full">
                              {isLoading ? <ChartSkeleton /> : (
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={dataPriceComparison} margin={{ top: 20, right: 10, left: 0, bottom: 5 }} barGap={2}>
+                                    <BarChart data={dataPriceComparison} margin={{ top: 20, right: 10, left: 0, bottom: 20 }} barGap={2}>
                                         <defs>
                                             <linearGradient id="gradMakkah" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="0%" stopColor={COLORS.primary} stopOpacity={1}/>
@@ -227,10 +227,10 @@ export const Visualization: React.FC = () => {
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-                                        <XAxis dataKey="name" fontSize={10} stroke="#6B7280" tickLine={false} axisLine={false} dy={10} fontWeight={500} interval={0} angle={-15} textAnchor="end" height={60} />
-                                        <YAxis fontSize={10} stroke="#6B7280" tickLine={false} axisLine={false} />
+                                        <XAxis dataKey="name" fontSize={11} stroke="#6B7280" tickLine={false} axisLine={false} dy={10} fontWeight={500} interval={0} angle={-15} textAnchor="end" height={60} />
+                                        <YAxis fontSize={11} stroke="#6B7280" tickLine={false} axisLine={false} />
                                         <Tooltip cursor={{fill: '#F3F4F6', radius: 8}} content={<CustomTooltip unit="SAR" />} />
-                                        <Legend iconType="circle" wrapperStyle={{paddingTop: '10px', fontSize: '11px'}} />
+                                        <Legend iconType="circle" wrapperStyle={{paddingTop: '20px', fontSize: '12px'}} />
                                         
                                         <Bar dataKey="makkah" name="Makkah" fill="url(#gradMakkah)" radius={[6, 6, 0, 0]} barSize={20} />
                                         <Bar dataKey="madinah" name="Madinah" fill="url(#gradMadinah)" radius={[6, 6, 0, 0]} barSize={20} />
@@ -246,10 +246,10 @@ export const Visualization: React.FC = () => {
                     <GlassCard 
                         title="Market Share Telco" 
                         subtitle="Estimasi Pengguna Aktif" 
-                        className="!bg-white/70 h-full min-h-[400px]"
+                        className="!bg-white/70 h-full min-h-[450px]"
                         action={<div className="p-2 bg-blue-50 rounded-lg text-blue-700"><Radio size={18}/></div>}
                     >
-                        <div className="h-[300px] md:h-[350px] mt-4 relative flex items-center justify-center">
+                        <div className="h-[350px] md:h-[400px] mt-4 relative flex items-center justify-center">
                             {isLoading ? <PieSkeleton /> : (
                                 <>
                                     <ResponsiveContainer width="100%" height="100%">
@@ -258,8 +258,8 @@ export const Visualization: React.FC = () => {
                                                 data={dataTelcoShare} 
                                                 cx="50%" 
                                                 cy="50%" 
-                                                innerRadius={60} 
-                                                outerRadius={90} 
+                                                innerRadius={70} 
+                                                outerRadius={100} 
                                                 paddingAngle={5} 
                                                 dataKey="value"
                                                 cornerRadius={8}
@@ -270,12 +270,12 @@ export const Visualization: React.FC = () => {
                                                 ))}
                                             </Pie>
                                             <Tooltip content={<CustomTooltip />} />
-                                            <Legend layout="horizontal" verticalAlign="bottom" align="center" iconType="circle" wrapperStyle={{fontSize: '10px', fontWeight: 600}} />
+                                            <Legend layout="horizontal" verticalAlign="bottom" align="center" iconType="circle" wrapperStyle={{fontSize: '11px', fontWeight: 600, paddingTop: '20px'}} />
                                         </PieChart>
                                     </ResponsiveContainer>
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-8">
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-12">
                                         <span className="text-3xl md:text-4xl font-bold text-[#064E3B] font-playfair">{dataTelcoShare.length}</span>
-                                        <span className="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Provider</span>
+                                        <span className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Provider</span>
                                     </div>
                                 </>
                             )}
@@ -291,20 +291,20 @@ export const Visualization: React.FC = () => {
                 <GlassCard 
                     title="Harga Beras Premium" 
                     subtitle="Perbandingan Harga per Perusahaan (SAR)" 
-                    className="!bg-white/70 min-h-[400px]"
+                    className="!bg-white/70 min-h-[450px]"
                     action={<div className="p-2 bg-green-50 rounded-lg text-green-700"><ShoppingCart size={18}/></div>}
                 >
-                    <div className="h-[320px] mt-6">
+                    <div className="h-[350px] md:h-[400px] mt-6">
                         {isLoading ? <ChartSkeleton /> : (
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={dataRicePrice} margin={{ top: 20, right: 30, left: 10, bottom: 5 }} layout="vertical">
                                     <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#E5E7EB" />
                                     <XAxis type="number" fontSize={11} stroke="#6B7280" tickLine={false} axisLine={false} />
-                                    <YAxis dataKey="name" type="category" width={100} fontSize={10} stroke="#6B7280" tickLine={false} axisLine={false} />
+                                    <YAxis dataKey="name" type="category" width={100} fontSize={11} stroke="#6B7280" tickLine={false} axisLine={false} />
                                     <Tooltip cursor={{fill: '#F3F4F6'}} content={<CustomTooltip unit="SAR" />} />
                                     <Bar dataKey="price" name="Harga Jual" fill={COLORS.primary} radius={[0, 4, 4, 0]} barSize={12} />
                                     <Bar dataKey="origin" name="Harga Asal" fill={COLORS.neutral} radius={[0, 4, 4, 0]} barSize={12} />
-                                    <Legend iconType="circle" />
+                                    <Legend iconType="circle" wrapperStyle={{fontSize: '12px', paddingTop: '10px'}} />
                                 </BarChart>
                             </ResponsiveContainer>
                         )}
@@ -315,10 +315,10 @@ export const Visualization: React.FC = () => {
                 <GlassCard 
                     title="Distribusi Revenue Tenant" 
                     subtitle={`Analisis Pendapatan (SAR) - ${timeFilter === 'all' ? 'Total' : timeFilter}`} 
-                    className="!bg-white/70 min-h-[400px]"
+                    className="!bg-white/70 min-h-[450px]"
                     action={<div className="p-2 bg-purple-50 rounded-lg text-purple-700"><TrendingUp size={18}/></div>}
                 >
-                    <div className="h-[320px] mt-6">
+                    <div className="h-[350px] md:h-[400px] mt-6">
                         {isLoading ? <PieSkeleton /> : (
                             <ResponsiveContainer width="100%" height="100%">
                                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={dataHotelRevenue}>
