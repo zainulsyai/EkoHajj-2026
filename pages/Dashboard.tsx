@@ -584,38 +584,66 @@ export const Dashboard: React.FC<DashboardProps> = ({ statusFilter, onStatusFilt
                   className="!bg-white/70 h-full min-h-[380px]"
                   action={<div className="p-2 bg-amber-50 rounded-lg text-amber-700"><PieIcon size={16}/></div>}
               >
-                  <div className="h-[280px] w-full relative">
-                      {isLoading ? <PieSkeleton /> : (
-                          rteChartData.length > 0 ? (
-                              <ResponsiveContainer width="100%" height="100%">
-                                  <PieChart>
-                                      <Pie 
-                                          activeIndex={activeIndex}
-                                          activeShape={renderActiveShape}
-                                          data={rteChartData} 
-                                          cx="50%" 
-                                          cy="50%" 
-                                          innerRadius={60} 
-                                          outerRadius={80} 
-                                          paddingAngle={4} 
-                                          dataKey="value"
-                                          cornerRadius={4}
-                                          stroke="none"
-                                          onMouseEnter={onPieEnter}
+                  <div className="flex flex-col h-[280px]">
+                      <div className="h-[160px] w-full relative -mt-4">
+                          {isLoading ? <PieSkeleton /> : (
+                              rteChartData.length > 0 ? (
+                                  <ResponsiveContainer width="100%" height="100%">
+                                      <PieChart>
+                                          <Pie 
+                                              activeIndex={activeIndex}
+                                              activeShape={renderActiveShape}
+                                              data={rteChartData} 
+                                              cx="50%" 
+                                              cy="50%" 
+                                              innerRadius={45} 
+                                              outerRadius={65} 
+                                              paddingAngle={4} 
+                                              dataKey="value"
+                                              cornerRadius={4}
+                                              stroke="none"
+                                              onMouseEnter={onPieEnter}
+                                          >
+                                              {rteChartData.map((entry, index) => (
+                                                  <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                                              ))}
+                                          </Pie>
+                                      </PieChart>
+                                  </ResponsiveContainer>
+                              ) : (
+                                  <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                                      <UtensilsCrossed size={24} className="mb-2 opacity-50" />
+                                      <p className="text-[10px]">Tidak ada data</p>
+                                  </div>
+                              )
+                          )}
+                      </div>
+                      
+                      {!isLoading && rteChartData.length > 0 && (
+                          <div className="mt-auto px-1 pb-2">
+                              <div className="grid grid-cols-2 gap-2">
+                                  {rteChartData.map((entry, index) => (
+                                      <div 
+                                          key={index} 
+                                          className={`flex flex-col p-2 rounded-lg transition-all cursor-pointer border ${activeIndex === index ? 'bg-amber-50 border-amber-100 shadow-sm' : 'bg-gray-50/50 hover:bg-gray-50 border-transparent'}`}
+                                          onMouseEnter={() => setActiveIndex(index)}
                                       >
-                                          {rteChartData.map((entry, index) => (
-                                              <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
-                                          ))}
-                                      </Pie>
-                                      <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{fontSize: '10px', paddingTop: '20px'}}/>
-                                  </PieChart>
-                              </ResponsiveContainer>
-                          ) : (
-                              <div className="flex flex-col items-center justify-center h-full text-gray-400">
-                                  <UtensilsCrossed size={24} className="mb-2 opacity-50" />
-                                  <p className="text-[10px]">Tidak ada data</p>
+                                          <div className="flex items-center gap-1.5 mb-1">
+                                              <div className="w-2 h-2 rounded-full flex-shrink-0 shadow-sm" style={{ backgroundColor: entry.color }}></div>
+                                              <span className={`text-[9px] font-bold truncate leading-tight ${activeIndex === index ? 'text-amber-900' : 'text-gray-700'}`}>
+                                                  {entry.name}
+                                              </span>
+                                          </div>
+                                          <div className="flex items-center justify-between">
+                                              <span className="text-[8px] text-gray-400 font-medium">{entry.value.toLocaleString()}</span>
+                                              <span className={`text-[9px] font-bold ${activeIndex === index ? 'text-amber-700' : 'text-gray-900'}`}>
+                                                  {totalRTE > 0 ? ((entry.value / totalRTE) * 100).toFixed(1) : 0}%
+                                              </span>
+                                          </div>
+                                      </div>
+                                  ))}
                               </div>
-                          )
+                          </div>
                       )}
                   </div>
               </GlassCard>
