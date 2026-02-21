@@ -92,7 +92,7 @@ export const Visualization: React.FC = () => {
 
     // 1. Price Comparison & Average - Adjusted for Time Context
     const dataPriceComparison = useMemo(() => {
-        const common = bumbuMakkah.filter(i => i.isUsed).slice(0, 6).map(makkahItem => {
+        const common = bumbuMakkah.filter(i => i.isUsed).slice(0, 8).map(makkahItem => {
             const madinahItem = bumbuMadinah.find(m => m.name === makkahItem.name);
             const fluctuation = timeFilter === 'today' ? 0.95 : timeFilter === 'week' ? 1.02 : 1;
             
@@ -106,8 +106,14 @@ export const Visualization: React.FC = () => {
                 avg: (makkahPrice + madinahPrice) / 2
             };
         });
-        return common;
+        return common.sort((a, b) => b.avg - a.avg);
     }, [bumbuMakkah, bumbuMadinah, timeFilter]);
+
+    const globalAvgPrice = useMemo(() => {
+        if (dataPriceComparison.length === 0) return 0;
+        const total = dataPriceComparison.reduce((acc, curr) => acc + curr.avg, 0);
+        return total / dataPriceComparison.length;
+    }, [dataPriceComparison]);
 
     // 2. Telecom Share (Donut Data)
     const dataTelcoShare = useMemo(() => {
@@ -271,15 +277,15 @@ export const Visualization: React.FC = () => {
                         <div className="h-[350px] md:h-[400px] mt-4 w-full">
                              {isLoading ? <ChartSkeleton /> : (
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={dataPriceComparison} margin={{ top: 20, right: 10, left: 0, bottom: 20 }} barGap={2}>
+                                    <BarChart data={dataPriceComparison} margin={{ top: 20, right: 45, left: 0, bottom: 20 }} barGap={4}>
                                         <defs>
                                             <linearGradient id="gradMakkah" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="0%" stopColor={COLORS.primary} stopOpacity={1}/>
-                                                <stop offset="100%" stopColor={COLORS.primary} stopOpacity={0.7}/>
+                                                <stop offset="100%" stopColor={COLORS.primaryLight} stopOpacity={0.8}/>
                                             </linearGradient>
                                             <linearGradient id="gradMadinah" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="0%" stopColor={COLORS.accent} stopOpacity={1}/>
-                                                <stop offset="100%" stopColor={COLORS.accent} stopOpacity={0.7}/>
+                                                <stop offset="100%" stopColor={COLORS.accentLight} stopOpacity={0.8}/>
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
@@ -288,8 +294,21 @@ export const Visualization: React.FC = () => {
                                         <Tooltip cursor={{fill: '#F3F4F6', radius: 8}} content={<CustomTooltip unit="SAR" />} />
                                         <Legend iconType="circle" wrapperStyle={{paddingTop: '20px', fontSize: '12px'}} />
                                         
-                                        <Bar dataKey="makkah" name="Makkah" fill="url(#gradMakkah)" radius={[6, 6, 0, 0]} barSize={20} />
-                                        <Bar dataKey="madinah" name="Madinah" fill="url(#gradMadinah)" radius={[6, 6, 0, 0]} barSize={20} />
+                                        <Bar dataKey="makkah" name="Makkah" fill="url(#gradMakkah)" radius={[4, 4, 0, 0]} barSize={24} />
+                                        <Bar dataKey="madinah" name="Madinah" fill="url(#gradMadinah)" radius={[4, 4, 0, 0]} barSize={24} />
+                                        
+                                        <ReferenceLine 
+                                            y={globalAvgPrice} 
+                                            stroke="#EF4444" 
+                                            strokeDasharray="3 3" 
+                                            label={{ 
+                                                position: 'right', 
+                                                value: `Avg: ${globalAvgPrice.toFixed(1)}`, 
+                                                fill: '#EF4444', 
+                                                fontSize: 10, 
+                                                fontWeight: 'bold' 
+                                            }} 
+                                        />
                                     </BarChart>
                                 </ResponsiveContainer>
                              )}
@@ -414,7 +433,7 @@ export const Visualization: React.FC = () => {
                     <div className="h-[350px] md:h-[400px] mt-6">
                         {isLoading ? <PieSkeleton /> : (
                             <ResponsiveContainer width="100%" height="100%">
-                                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={dataHotelRevenue}>
+                                <RadarChart cx="50%" cy="50%" outerRadius="60%" data={dataHotelRevenue}>
                                     <defs>
                                         <radialGradient id="gradRadarRevenue" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
                                             <stop offset="0%" stopColor={COLORS.secondary} stopOpacity={0.1}/>
@@ -422,7 +441,12 @@ export const Visualization: React.FC = () => {
                                         </radialGradient>
                                     </defs>
                                     <PolarGrid stroke="#E5E7EB" strokeDasharray="4 4" />
-                                    <PolarAngleAxis dataKey="subject" fontSize={11} tick={{ fill: '#4B5563', fontWeight: 'bold' }} />
+                                    <PolarAngleAxis 
+                                        dataKey="subject" 
+                                        fontSize={10} 
+                                        tick={{ fill: '#4B5563', fontWeight: 'bold' }} 
+                                        tickFormatter={(val) => val.length > 12 ? `${val.substring(0, 12)}...` : val}
+                                    />
                                     <PolarRadiusAxis angle={30} stroke="none" />
                                     
                                     <Radar 
