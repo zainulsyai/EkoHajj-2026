@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Save, Truck, Plus, Trash2, ArrowLeft, MapPin, User, Calendar, Building, DollarSign, Weight, Clock, FileText, Calculator, Layers, Building2, RotateCcw, Send } from 'lucide-react';
 import { ExpeditionRecord } from '../../types';
 import { useData } from '../../contexts/DataContext';
@@ -162,31 +163,34 @@ export const ExpeditionForm: React.FC<ExpeditionFormProps> = ({ onBack }) => {
         </div>
       </div>
       {/* FLOATING ACTION BAR */}
-      <div className="fixed bottom-6 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 md:min-w-[400px] z-50 bg-white/90 backdrop-blur-xl border border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-full p-2 flex items-center justify-between md:justify-center gap-2 md:gap-4 transition-all duration-300">
-          <button 
-              onClick={handleReset}
-              className="group flex items-center justify-center gap-2 px-4 py-3 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-bold text-red-600 bg-red-50/50 border border-red-100 hover:bg-red-100 transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 flex-1 md:flex-none"
-              title="Hapus semua isian"
-          >
-              <RotateCcw className="w-4 h-4 md:w-5 md:h-5 group-hover:-rotate-180 transition-transform duration-500" /> 
-              <span className="hidden sm:inline">Reset</span>
-          </button>
-          
-          <button 
-              onClick={handleDraft}
-              className="group flex items-center justify-center gap-2 px-4 py-3 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-bold text-[#D4AF37] bg-yellow-50/50 border border-yellow-100 hover:bg-yellow-100 transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 flex-1 md:flex-none"
-          >
-              <Save className="w-4 h-4 md:w-5 md:h-5" /> <span>Draft</span>
-          </button>
+      {createPortal(
+        <div className="fixed bottom-6 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 md:min-w-[400px] z-[9999] bg-white/90 backdrop-blur-xl border border-gray-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-full p-2 flex items-center justify-between md:justify-center gap-2 md:gap-4 transition-all duration-300 animate-in fade-in slide-in-from-bottom-4">
+            <button 
+                onClick={handleReset}
+                className="group flex items-center justify-center gap-2 px-4 py-3 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-bold text-red-600 bg-red-50/50 border border-red-100 hover:bg-red-100 transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 flex-1 md:flex-none"
+                title="Hapus semua isian"
+            >
+                <RotateCcw className="w-4 h-4 md:w-5 md:h-5 group-hover:-rotate-180 transition-transform duration-500" /> 
+                <span className="hidden sm:inline">Reset</span>
+            </button>
+            
+            <button 
+                onClick={handleDraft}
+                className="group flex items-center justify-center gap-2 px-4 py-3 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-bold text-[#D4AF37] bg-yellow-50/50 border border-yellow-100 hover:bg-yellow-100 transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 flex-1 md:flex-none"
+            >
+                <Save className="w-4 h-4 md:w-5 md:h-5" /> <span>Draft</span>
+            </button>
 
-          <button 
-              onClick={handleSubmit}
-              className="group flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-3 rounded-full text-xs md:text-sm font-bold text-white bg-gradient-to-br from-[#064E3B] to-[#042f24] hover:from-[#053d2e] hover:to-[#064E3B] transition-all duration-300 shadow-lg shadow-[#064E3B]/30 hover:shadow-[#064E3B]/50 hover:-translate-y-1 active:scale-95 flex-[2] md:flex-none md:min-w-[180px]"
-          >
-              <Send className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /> 
-              <span>Submit Laporan</span>
-          </button>
-      </div>
+            <button 
+                onClick={handleSubmit}
+                className="group flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-3 rounded-full text-xs md:text-sm font-bold text-white bg-gradient-to-br from-[#064E3B] to-[#042f24] hover:from-[#053d2e] hover:to-[#064E3B] transition-all duration-300 shadow-lg shadow-[#064E3B]/30 hover:shadow-[#064E3B]/50 hover:-translate-y-1 active:scale-95 flex-[2] md:flex-none md:min-w-[180px]"
+            >
+                <Send className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /> 
+                <span>Submit Laporan</span>
+            </button>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };
