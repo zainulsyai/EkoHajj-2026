@@ -116,59 +116,42 @@ export const SpiceForm: React.FC<SpiceFormProps> = ({ onBack }) => {
           <div className="px-8 py-6 flex flex-col xl:flex-row xl:items-center justify-between gap-6 relative z-10">
              <div className="flex items-center gap-6">
                  <button onClick={onBack} className="p-3 rounded-2xl hover:bg-white text-gray-500 hover:text-[#064E3B] transition-all border border-transparent hover:border-gray-200 shadow-sm"><ArrowLeft size={22} /></button>
-                 <div className="flex items-center gap-5">
-                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg shadow-[#064E3B]/20 bg-gradient-to-br from-[#064E3B] to-[#042f24] text-white ring-4 ring-white/50`}>
-                        <ChefHat size={32} strokeWidth={1.5} />
+                 <div className="flex items-center gap-3 md:gap-5">
+                    <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center shadow-lg shadow-[#064E3B]/20 bg-gradient-to-br from-[#064E3B] to-[#042f24] text-white ring-2 md:ring-4 ring-white/50`}>
+                        <ChefHat className="w-6 h-6 md:w-8 md:h-8" strokeWidth={1.5} />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-[#064E3B] leading-none tracking-tight font-playfair mb-1.5">Bumbu Pasta</h1>
+                        <h1 className="text-lg md:text-2xl font-bold text-[#064E3B] leading-none tracking-tight font-playfair mb-1 md:mb-1.5">Bumbu Pasta</h1>
                         <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded-full bg-[#064E3B]/10 border border-[#064E3B]/20 text-[10px] font-bold text-[#064E3B] uppercase tracking-widest">Layanan Konsumsi</span>
+                            <span className="px-2 py-0.5 rounded-full bg-[#064E3B]/10 border border-[#064E3B]/20 text-[9px] md:text-[10px] font-bold text-[#064E3B] uppercase tracking-widest">Layanan Konsumsi</span>
                         </div>
                     </div>
                  </div>
              </div>
 
-             <div className="flex items-center gap-3 self-end xl:self-auto">
-                {/* Search Bar - Enhanced Visibility */}
-                <div className="relative group mr-2 hidden md:block">
-                    {/* Ambient Glow */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#064E3B]/5 to-[#D4AF37]/5 rounded-2xl blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    <div className="relative">
-                        <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#064E3B] transition-colors z-10" />
-                        <input 
-                            type="text" 
-                            placeholder="Cari jenis bumbu..." 
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-12 pr-5 py-3 w-72 bg-white border border-gray-200 rounded-2xl text-sm font-semibold text-gray-700 shadow-sm focus:outline-none focus:border-[#064E3B] focus:ring-4 focus:ring-[#064E3B]/10 transition-all placeholder:text-gray-400 group-hover:border-[#064E3B]/30 group-hover:shadow-md"
-                        />
-                    </div>
-                </div>
-
+             <div className="flex items-center gap-3 self-center xl:self-auto">
                 {/* ACTION BUTTONS */}
                 <button 
                     onClick={handleReset}
-                    className="group flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-br from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition-all duration-300 shadow-lg shadow-red-500/30 hover:shadow-red-500/50 hover:-translate-y-0.5 active:scale-95"
+                    className="group flex items-center gap-1.5 md:gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-xl text-[10px] md:text-xs font-bold text-red-600 bg-white border border-red-100 hover:bg-red-50 hover:border-red-200 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95"
                     title="Hapus semua isian"
                 >
-                    <RotateCcw size={16} className="group-hover:-rotate-180 transition-transform duration-500" /> 
+                    <RotateCcw className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:-rotate-180 transition-transform duration-500" /> 
                     <span className="hidden sm:inline">Reset Form</span>
                 </button>
                 
                 <button 
                     onClick={handleDraft}
-                    className="group flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-br from-[#D4AF37] to-[#B4941F] hover:from-[#c4a02f] hover:to-[#967a15] transition-all duration-300 shadow-lg shadow-[#D4AF37]/30 hover:shadow-[#D4AF37]/50 hover:-translate-y-0.5 active:scale-95"
+                    className="group flex items-center gap-1.5 md:gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-xl text-[10px] md:text-xs font-bold text-white bg-gradient-to-br from-[#D4AF37] to-[#B4941F] hover:from-[#c4a02f] hover:to-[#967a15] transition-all duration-300 shadow-lg shadow-[#D4AF37]/30 hover:shadow-[#D4AF37]/50 hover:-translate-y-0.5 active:scale-95"
                 >
-                    <Save size={16} /> <span>Simpan Draft</span>
+                    <Save className="w-3.5 h-3.5 md:w-4 md:h-4" /> <span>Simpan Draft</span>
                 </button>
 
                 <button 
                     onClick={handleSubmit}
-                    className="group flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-br from-[#064E3B] to-[#042f24] hover:from-[#053d2e] hover:to-[#064E3B] transition-all duration-300 shadow-lg shadow-[#064E3B]/30 hover:shadow-[#064E3B]/50 hover:-translate-y-0.5 active:scale-95"
+                    className="group flex items-center gap-1.5 md:gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-xl text-[10px] md:text-xs font-bold text-white bg-gradient-to-br from-[#064E3B] to-[#042f24] hover:from-[#053d2e] hover:to-[#064E3B] transition-all duration-300 shadow-lg shadow-[#064E3B]/30 hover:shadow-[#064E3B]/50 hover:-translate-y-0.5 active:scale-95"
                 >
-                    <Send size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" /> 
+                    <Send className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" /> 
                     <span>Submit Laporan</span>
                 </button>
              </div>
@@ -243,7 +226,7 @@ export const SpiceForm: React.FC<SpiceFormProps> = ({ onBack }) => {
       {/* GRID CONTENT */}
       <div className="p-8 pt-2 z-10">
           
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-[#064E3B] rounded-xl shadow-lg shadow-[#064E3B]/20"><Package size={20} className="text-white" /></div>
                 <div>
@@ -251,8 +234,39 @@ export const SpiceForm: React.FC<SpiceFormProps> = ({ onBack }) => {
                     <p className="text-xs text-gray-500 font-medium tracking-wide">Input ketersediaan, perusahaan penyedia, volume, dan harga</p>
                 </div>
               </div>
-              <div className="px-4 py-2 bg-white/50 rounded-lg text-xs font-bold text-gray-500 border border-white">
-                  Total {filteredRecords.length} jenis
+              
+              <div className="flex items-center gap-3 w-full md:w-auto">
+                  {/* Search Bar - Desktop/Tablet Only */}
+                  <div className="relative group hidden md:block flex-1 md:flex-none">
+                      <div className="relative">
+                          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#064E3B] transition-colors z-10" />
+                          <input 
+                              type="text" 
+                              placeholder="Cari..." 
+                              value={searchTerm}
+                              onChange={(e) => setSearchTerm(e.target.value)}
+                              className="pl-9 pr-4 py-2 w-full md:w-32 lg:w-64 bg-white border border-gray-200 rounded-xl text-xs font-semibold text-gray-700 shadow-sm focus:outline-none focus:border-[#064E3B] focus:ring-4 focus:ring-[#064E3B]/10 transition-all placeholder:text-gray-400 group-hover:border-[#064E3B]/30 group-hover:shadow-md"
+                          />
+                      </div>
+                  </div>
+
+                  <div className="px-4 py-2 bg-white/50 rounded-lg text-xs font-bold text-gray-500 border border-white whitespace-nowrap ml-auto md:ml-0">
+                      Total {filteredRecords.length} jenis
+                  </div>
+              </div>
+          </div>
+
+          {/* Search Bar - Mobile Only */}
+          <div className="relative group mb-6 block md:hidden">
+              <div className="relative">
+                  <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#064E3B] transition-colors z-10" />
+                  <input 
+                      type="text" 
+                      placeholder="Cari jenis bumbu..." 
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-12 pr-5 py-3 w-full bg-white border border-gray-200 rounded-2xl text-sm font-semibold text-gray-700 shadow-sm focus:outline-none focus:border-[#064E3B] focus:ring-4 focus:ring-[#064E3B]/10 transition-all placeholder:text-gray-400 group-hover:border-[#064E3B]/30 group-hover:shadow-md"
+                  />
               </div>
           </div>
 
