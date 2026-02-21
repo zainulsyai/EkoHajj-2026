@@ -71,7 +71,7 @@ export const TelecomForm: React.FC<TelecomFormProps> = ({ onBack }) => {
   const THEME_COLOR = '#7C3AED';
 
   return (
-    <div className="flex flex-col relative font-sans bg-white/60 backdrop-blur-xl rounded-[2.5rem] border border-white/60 shadow-2xl overflow-hidden animate-fade-in-up">
+    <div className="flex flex-col relative font-sans bg-white/60 backdrop-blur-xl rounded-[2.5rem] border border-white/60 shadow-2xl overflow-hidden animate-fade-in-up pb-32">
       <div className="relative z-20 bg-white/40 backdrop-blur-lg border-b border-white/50 px-8 py-6 overflow-hidden">
          {/* Watermark */}
          <div className="absolute top-[-20%] right-[-5%] text-[#7C3AED] opacity-5 pointer-events-none transform rotate-12 scale-150">
@@ -94,31 +94,7 @@ export const TelecomForm: React.FC<TelecomFormProps> = ({ onBack }) => {
                  </div>
              </div>
              
-             {/* Action Buttons */}
-            <div className="flex items-center gap-3 self-center xl:self-auto">
-                <button 
-                    onClick={handleReset} 
-                    className="group flex items-center gap-1.5 md:gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-xl text-[10px] md:text-xs font-bold text-red-600 bg-white border border-red-100 hover:bg-red-50 hover:border-red-200 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95"
-                >
-                    <RotateCcw className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:-rotate-180 transition-transform duration-500" /> 
-                    <span className="hidden sm:inline">Reset Form</span>
-                </button>
-
-                <button 
-                    onClick={handleDraft} 
-                    className="group flex items-center gap-1.5 md:gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-xl text-[10px] md:text-xs font-bold text-white bg-gradient-to-br from-[#D4AF37] to-[#B4941F] hover:from-[#c4a02f] hover:to-[#967a15] transition-all duration-300 shadow-lg shadow-[#D4AF37]/30 hover:shadow-[#D4AF37]/50 hover:-translate-y-0.5 active:scale-95"
-                >
-                    <Save className="w-3.5 h-3.5 md:w-4 md:h-4" /> <span>Simpan Draft</span>
-                </button>
-
-                <button 
-                    onClick={handleSubmit} 
-                    className="group flex items-center gap-1.5 md:gap-2 px-3 py-2 md:px-6 md:py-2.5 rounded-xl text-[10px] md:text-xs font-bold text-white bg-gradient-to-br from-[#064E3B] to-[#042f24] hover:from-[#053d2e] hover:to-[#064E3B] transition-all duration-300 shadow-lg shadow-[#064E3B]/30 hover:shadow-[#064E3B]/50 hover:-translate-y-0.5 active:scale-95"
-                >
-                    <Send className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" /> 
-                    <span>Submit Laporan</span>
-                </button>
-            </div>
+             {/* Action Buttons REMOVED - MOVED TO BOTTOM BAR */}
          </div>
 
          <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-8 shadow-sm relative z-10">
@@ -184,6 +160,32 @@ export const TelecomForm: React.FC<TelecomFormProps> = ({ onBack }) => {
                 Tambah Provider Baru
             </button>
         </div>
+      </div>
+      {/* FIXED BOTTOM BAR */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] z-50 flex items-center justify-center gap-3 md:gap-6 transition-all duration-300">
+          <button 
+              onClick={handleReset}
+              className="group flex items-center justify-center gap-2 px-4 py-3 md:px-8 md:py-4 rounded-2xl text-xs md:text-sm font-bold text-red-600 bg-red-50 border border-red-100 hover:bg-red-100 hover:border-red-200 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1 active:scale-95 flex-1 md:flex-none max-w-[140px]"
+              title="Hapus semua isian"
+          >
+              <RotateCcw className="w-4 h-4 md:w-5 md:h-5 group-hover:-rotate-180 transition-transform duration-500" /> 
+              <span>Reset</span>
+          </button>
+          
+          <button 
+              onClick={handleDraft}
+              className="group flex items-center justify-center gap-2 px-4 py-3 md:px-8 md:py-4 rounded-2xl text-xs md:text-sm font-bold text-[#D4AF37] bg-yellow-50 border border-yellow-100 hover:bg-yellow-100 hover:border-yellow-200 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1 active:scale-95 flex-1 md:flex-none max-w-[140px]"
+          >
+              <Save className="w-4 h-4 md:w-5 md:h-5" /> <span>Draft</span>
+          </button>
+
+          <button 
+              onClick={handleSubmit}
+              className="group flex items-center justify-center gap-2 px-6 py-3 md:px-10 md:py-4 rounded-2xl text-xs md:text-sm font-bold text-white bg-gradient-to-br from-[#064E3B] to-[#042f24] hover:from-[#053d2e] hover:to-[#064E3B] transition-all duration-300 shadow-lg shadow-[#064E3B]/30 hover:shadow-[#064E3B]/50 hover:-translate-y-1 active:scale-95 flex-[2] md:flex-none md:min-w-[200px]"
+          >
+              <Send className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /> 
+              <span>Submit Laporan</span>
+          </button>
       </div>
     </div>
   );
